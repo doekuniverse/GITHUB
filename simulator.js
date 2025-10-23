@@ -36,6 +36,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputLine = document.getElementById('input-line');
     const terminal = document.getElementById('terminal');
     
+    // Show Amazon Linux banner
+    showWelcomeBanner();
+    
     // Handle keyboard input
     document.addEventListener('keydown', handleKeyPress);
     
@@ -46,6 +49,26 @@ document.addEventListener('DOMContentLoaded', function() {
     
     focusInput();
 });
+
+function showWelcomeBanner() {
+    const terminal = document.getElementById('terminal');
+    const banner = `<span style="color: #ff9900;">   ,     #_</span>
+<span style="color: #ff9900;">   ~\\_  ####_</span>        <span style="color: #ffffff; font-weight: bold;">Amazon Linux 2023</span>
+<span style="color: #ff9900;">  ~~  \\_#####\\</span>
+<span style="color: #ff9900;">  ~~     \\###|</span>      <span style="color: #00ff00;">https://aws.amazon.com/linux/amazon-linux-2023</span>
+<span style="color: #ff9900;">  ~~       \\#/ ___</span>
+<span style="color: #ff9900;">   ~~       V~' '</span>   Last login: ${new Date().toLocaleString()}
+<span style="color: #ff9900;">    ~~~         /</span>
+<span style="color: #ff9900;">      ~~._.   _/</span>
+<span style="color: #ff9900;">         _/ _/</span>
+<span style="color: #ff9900;">       _/m/'</span>
+
+<span style="color: #ffff00;">Bienvenido al Simulador de Amazon Linux 2023</span>
+<span style="color: #00ffff;">Escribe 'help' para ver los comandos disponibles</span>
+`;
+    terminal.innerHTML = banner;
+    addPrompt();
+}
 
 function handleKeyPress(e) {
     const inputLine = document.getElementById('input-line');
@@ -148,10 +171,7 @@ function addOutput(text) {
 }
 
 function clearTerminal() {
-    const terminal = document.getElementById('terminal');
-    terminal.innerHTML = '';
-    addOutput('<span style="color: #00ff00;">Amazon Linux 2023 Simulator</span>');
-    addPrompt();
+    showWelcomeBanner();
 }
 
 function simulateCommand(cmd) {
@@ -161,15 +181,48 @@ function simulateCommand(cmd) {
     
     switch (command) {
         case 'help':
-            return `Comandos disponibles:
-<span style="color: #00ffff;">Sistema de Archivos:</span> pwd, ls, cd, mkdir, touch, cat, find, tree, file, du, df
-<span style="color: #00ffff;">Procesos:</span> ps, top, kill, whoami, hostname, uptime, free, date, uname, w
-<span style="color: #00ffff;">Red:</span> ip, ping, curl, ifconfig, ss, netstat
-<span style="color: #00ffff;">Paquetes:</span> dnf, yum, rpm
-<span style="color: #00ffff;">Servicios:</span> systemctl
-<span style="color: #00ffff;">Utilidades:</span> echo, clear, history, man, grep, head, tail
+            return `<span style="color: #ffff00; font-weight: bold;">COMANDOS DISPONIBLES EN EL SIMULADOR:</span>
 
-Escribe cualquier comando para probarlo. Para más info: man [comando]`;
+<span style="color: #00ffff;">📁 Sistema de Archivos:</span>
+pwd, ls, cd, mkdir, touch, cat, rm, rmdir, cp, mv, ln, chmod, chown, chgrp
+find, locate, tree, file, du, df, stat, readlink
+
+<span style="color: #00ffff;">⚙️ Procesos y Servicios:</span>
+ps, top, htop, kill, killall, pkill, pgrep, jobs, bg, fg, nohup
+systemctl, service, journalctl, dmesg
+
+<span style="color: #00ffff;">👤 Usuarios y Permisos:</span>
+whoami, who, w, id, su, sudo, passwd, useradd, usermod, userdel, groupadd
+groupdel, groupmod, groups, newgrp
+
+<span style="color: #00ffff;">🌐 Red y Conectividad:</span>
+ip, ifconfig, ping, traceroute, curl, wget, ss, netstat, route, hostname
+dig, nslookup, host, nc, telnet, ssh, scp, rsync
+
+<span style="color: #00ffff;">📦 Gestión de Paquetes:</span>
+dnf, yum, rpm, yum-config-manager, dnf-automatic
+
+<span style="color: #00ffff;">📝 Manipulación de Texto:</span>
+cat, head, tail, less, more, grep, egrep, fgrep, awk, sed, cut, sort, uniq
+wc, tr, paste, join, diff, patch, comm, column
+
+<span style="color: #00ffff;">🗜️ Compresión y Archivado:</span>
+tar, gzip, gunzip, bzip2, bunzip2, xz, unxz, zip, unzip, zcat
+
+<span style="color: #00ffff;">✏️ Editores:</span>
+nano, vi, vim
+
+<span style="color: #00ffff;">💾 Almacenamiento y Discos:</span>
+lsblk, fdisk, parted, mkfs, mount, umount, blkid, df, du
+
+<span style="color: #00ffff;">📊 Información del Sistema:</span>
+uname, hostname, uptime, date, cal, free, lscpu, lsmem, dmidecode
+
+<span style="color: #00ffff;">🔧 Utilidades:</span>
+echo, printf, clear, history, man, which, whereis, type, alias, unalias
+export, env, printenv, set, source, bash, exit, logout
+
+<span style="color: #00ff00;">Escribe cualquier comando para probarlo. Para más info: man [comando]</span>`;
         
         case 'pwd':
             return currentDir === '~' ? '/home/ec2-user' : currentDir;
@@ -461,6 +514,340 @@ tcp    ESTAB      0      0      172.31.0.2:22               203.0.113.1:54321`;
             return `Línea 1 del archivo
 Línea 2 del archivo
 Línea 3 del archivo`;
+        
+        case 'rm':
+            return args[0] ? `rm: removed '${args[0]}'` : 'rm: falta un operando';
+        
+        case 'rmdir':
+            return args[0] ? `rmdir: removed directory '${args[0]}'` : 'rmdir: falta un operando';
+        
+        case 'cp':
+            return args.length >= 2 ? `'${args[0]}' -> '${args[1]}'` : 'cp: faltan argumentos';
+        
+        case 'mv':
+            return args.length >= 2 ? `renamed '${args[0]}' -> '${args[1]}'` : 'mv: faltan argumentos';
+        
+        case 'chmod':
+            return args.length >= 2 ? `mode of '${args[1]}' changed to ${args[0]}` : 'chmod: faltan argumentos';
+        
+        case 'chown':
+            return args.length >= 2 ? `ownership of '${args[1]}' changed` : 'chown: faltan argumentos';
+        
+        case 'chgrp':
+            return args.length >= 2 ? `group of '${args[1]}' changed to ${args[0]}` : 'chgrp: faltan argumentos';
+        
+        case 'ln':
+            return args.length >= 2 ? `created link '${args[1]}' -> '${args[0]}'` : 'ln: faltan argumentos';
+        
+        case 'id':
+            return `uid=1000(ec2-user) gid=1000(ec2-user) groups=1000(ec2-user),4(adm),10(wheel),190(systemd-journal)`;
+        
+        case 'groups':
+            return `ec2-user adm wheel systemd-journal`;
+        
+        case 'useradd':
+            return args[0] ? `useradd: user '${args[0]}' created` : 'useradd: falta especificar usuario';
+        
+        case 'usermod':
+            return args[args.length - 1] ? `usermod: user '${args[args.length - 1]}' modified` : 'usermod: falta especificar usuario';
+        
+        case 'userdel':
+            return args[0] ? `userdel: user '${args[0]}' removed` : 'userdel: falta especificar usuario';
+        
+        case 'groupadd':
+            return args[0] ? `groupadd: group '${args[0]}' created` : 'groupadd: falta especificar grupo';
+        
+        case 'groupdel':
+            return args[0] ? `groupdel: group '${args[0]}' removed` : 'groupdel: falta especificar grupo';
+        
+        case 'passwd':
+            return `Changing password for user ${args[0] || 'ec2-user'}.\nNew password: (password would be entered here)\nRetype new password:\npasswd: all authentication tokens updated successfully.`;
+        
+        case 'su':
+            return `[root@ip-172-31-0-1 ~]# `;
+        
+        case 'sudo':
+            if (args.length > 0) {
+                return `[sudo] password for ec2-user:\n` + simulateCommand(args.join(' '));
+            }
+            return 'sudo: falta un comando para ejecutar';
+        
+        case 'kill':
+            return args[0] ? `kill: sent signal to process ${args[0]}` : 'kill: falta especificar PID';
+        
+        case 'killall':
+        case 'pkill':
+            return args[0] ? `${command}: sent signal to processes matching '${args[0]}'` : `${command}: falta especificar nombre de proceso`;
+        
+        case 'pgrep':
+            return args[0] ? `1234\n5678\n9012` : 'pgrep: falta especificar patrón';
+        
+        case 'htop':
+            return `Interactive process viewer (simulated)
+Press F10 or 'q' to quit (simulated)
+
+  PID USER      PRI  NI  VIRT   RES   SHR S CPU% MEM%   TIME+  Command
+    1 root       20   0  169M  13M  8652 S  0.0  0.3  0:02.15 systemd
+ 5679 root       20   0  125M  12M  8564 S  0.3  0.3  0:00.42 nginx
+ 1234 ec2-user   20   0  116M  3208  2844 S  0.0  0.1  0:00.01 bash`;
+        
+        case 'jobs':
+            return `[1]+  Running                 sleep 100 &`;
+        
+        case 'bg':
+            return `[1]+ sleep 100 &`;
+        
+        case 'fg':
+            return `sleep 100`;
+        
+        case 'nohup':
+            return args.length > 0 ? `nohup: ignoring input and appending output to 'nohup.out'` : 'nohup: falta especificar comando';
+        
+        case 'journalctl':
+            return `-- Logs begin at Mon 2023-10-23 12:00:00 UTC, end at Mon 2023-10-23 15:42:18 UTC. --
+Oct 23 15:00:12 ip-172-31-0-1 systemd[1]: Starting The nginx HTTP Server...
+Oct 23 15:00:12 ip-172-31-0-1 systemd[1]: Started The nginx HTTP Server.
+Oct 23 15:30:15 ip-172-31-0-1 sshd[1234]: Accepted publickey for ec2-user from 203.0.113.1`;
+        
+        case 'dmesg':
+            return `[    0.000000] Linux version 6.1.19-30.43.amzn2023.x86_64
+[    0.000000] Command line: BOOT_IMAGE=/boot/vmlinuz-6.1.19-30.43.amzn2023.x86_64
+[    1.234567] Memory: 4045312K/4194304K available
+[    2.345678] Amazon Elastic Network Adapter (ENA) driver version 2.8.0`;
+        
+        case 'lsblk':
+            return `NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+xvda    202:0    0   20G  0 disk
+└─xvda1 202:1    0   20G  0 part /
+xvdf    202:80   0   50G  0 disk /data`;
+        
+        case 'blkid':
+            return `/dev/xvda1: UUID="12345678-1234-1234-1234-123456789abc" TYPE="xfs" PARTUUID="abcdef01-02"
+/dev/xvdf: UUID="87654321-4321-4321-4321-cba987654321" TYPE="xfs"`;
+        
+        case 'fdisk':
+            return `Disk /dev/xvda: 20 GiB, 21474836480 bytes, 41943040 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt`;
+        
+        case 'mount':
+            if (args.length === 0) {
+                return `/dev/xvda1 on / type xfs (rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota)
+/dev/xvdf on /data type xfs (rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota)
+tmpfs on /dev/shm type tmpfs (rw,nosuid,nodev)`;
+            }
+            return args.length >= 2 ? `mounted ${args[0]} on ${args[1]}` : 'mount: faltan argumentos';
+        
+        case 'umount':
+            return args[0] ? `umounted ${args[0]}` : 'umount: falta especificar dispositivo o punto de montaje';
+        
+        case 'tar':
+            if (args.includes('-czf') || args.includes('-czvf')) {
+                return args[1] ? `Created archive: ${args[1]}` : 'tar: falta especificar archivo';
+            } else if (args.includes('-xzf') || args.includes('-xzvf')) {
+                return args[1] ? `Extracted archive: ${args[1]}` : 'tar: falta especificar archivo';
+            }
+            return `tar: debe especificar una de las opciones '-Acdtrux'`;
+        
+        case 'gzip':
+            return args[0] ? `${args[0]} compressed to ${args[0]}.gz` : 'gzip: falta especificar archivo';
+        
+        case 'gunzip':
+            return args[0] ? `${args[0]} decompressed` : 'gunzip: falta especificar archivo';
+        
+        case 'zip':
+            return args.length >= 2 ? `adding: ${args[1]} (stored 0%)\nCreated: ${args[0]}` : 'zip: faltan argumentos';
+        
+        case 'unzip':
+            return args[0] ? `Archive:  ${args[0]}\n  inflating: file1.txt\n  inflating: file2.txt` : 'unzip: falta especificar archivo';
+        
+        case 'less':
+        case 'more':
+            return `(use 'q' to quit - simulated)
+This is a simulated ${command} output.
+In a real terminal, this would show file contents with pagination.
+Use arrow keys to scroll, 'q' to quit.`;
+        
+        case 'awk':
+            return `AWK command simulated. Pattern: ${args.join(' ')}
+field1    field2    field3
+value1    value2    value3`;
+        
+        case 'sed':
+            return args.join(' ') ? `sed: pattern '${args.join(' ')}' applied` : 'sed: no se especificó ningún comando';
+        
+        case 'cut':
+            return `field1
+field2
+field3`;
+        
+        case 'sort':
+            return `line1\nline2\nline3`;
+        
+        case 'uniq':
+            return `unique_line1\nunique_line2\nunique_line3`;
+        
+        case 'wc':
+            if (args.includes('-l')) {
+                return `      42 ${args[args.length - 1] || 'archivo'}`;
+            } else if (args.includes('-w')) {
+                return `     256 ${args[args.length - 1] || 'archivo'}`;
+            } else if (args.includes('-c')) {
+                return `    1542 ${args[args.length - 1] || 'archivo'}`;
+            }
+            return `      42     256    1542 ${args[0] || 'archivo'}`;
+        
+        case 'diff':
+            return args.length >= 2 ? `1c1\n< Contenido del archivo ${args[0]}\n---\n> Contenido del archivo ${args[1]}` : 'diff: faltan argumentos';
+        
+        case 'nano':
+        case 'vi':
+        case 'vim':
+            return `Editor ${command} simulado.\nEn un sistema real, esto abriría el editor ${command.toUpperCase()}.\nUsa Ctrl+X para salir de nano, o :q! para salir de vim.`;
+        
+        case 'which':
+            return args[0] ? `/usr/bin/${args[0]}` : 'which: falta especificar comando';
+        
+        case 'whereis':
+            return args[0] ? `${args[0]}: /usr/bin/${args[0]} /usr/share/man/man1/${args[0]}.1.gz` : 'whereis: falta especificar comando';
+        
+        case 'type':
+            return args[0] ? `${args[0]} is /usr/bin/${args[0]}` : 'type: falta especificar comando';
+        
+        case 'alias':
+            if (args.length === 0) {
+                return `alias ll='ls -la'\nalias la='ls -A'\nalias l='ls -CF'`;
+            }
+            return `alias ${args.join(' ')} created`;
+        
+        case 'export':
+            return args[0] ? `Variable ${args[0]} exported` : 'export: falta especificar variable';
+        
+        case 'env':
+        case 'printenv':
+            return `PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
+HOME=/home/ec2-user
+USER=ec2-user
+SHELL=/bin/bash
+LANG=en_US.UTF-8
+AWS_DEFAULT_REGION=us-east-1`;
+        
+        case 'set':
+            return `BASH=/bin/bash\nBASH_VERSION='5.2.15(1)-release'\nHOME=/home/ec2-user\nHOSTNAME=ip-172-31-0-1\nPATH=/usr/local/bin:/usr/bin:/bin`;
+        
+        case 'lscpu':
+            return `Architecture:                    x86_64
+CPU op-mode(s):                  32-bit, 64-bit
+Byte Order:                      Little Endian
+Address sizes:                   46 bits physical, 48 bits virtual
+CPU(s):                          2
+On-line CPU(s) list:             0,1
+Thread(s) per core:              2
+Core(s) per socket:              1
+Socket(s):                       1
+Vendor ID:                       GenuineIntel
+Model name:                      Intel(R) Xeon(R) Platinum 8259CL CPU @ 2.50GHz`;
+        
+        case 'cal':
+            return `    October 2023
+Su Mo Tu We Th Fr Sa
+ 1  2  3  4  5  6  7
+ 8  9 10 11 12 13 14
+15 16 17 18 19 20 21
+22 23 24 25 26 27 28
+29 30 31`;
+        
+        case 'traceroute':
+            return `traceroute to ${args[0] || 'google.com'} (142.250.185.46), 30 hops max, 60 byte packets
+ 1  172.31.0.1 (172.31.0.1)  0.532 ms  0.498 ms  0.485 ms
+ 2  * * *
+ 3  100.66.8.86 (100.66.8.86)  1.234 ms  1.198 ms  1.165 ms`;
+        
+        case 'dig':
+            return `; <<>> DiG 9.16.42 <<>> ${args[0] || 'example.com'}
+;; ANSWER SECTION:
+${args[0] || 'example.com'}.    86400   IN  A   93.184.216.34
+
+;; Query time: 23 msec
+;; SERVER: 172.31.0.2#53(172.31.0.2)
+;; WHEN: Mon Oct 23 15:42:18 UTC 2023`;
+        
+        case 'nslookup':
+            return `Server:         172.31.0.2
+Address:        172.31.0.2#53
+
+Non-authoritative answer:
+Name:   ${args[0] || 'example.com'}
+Address: 93.184.216.34`;
+        
+        case 'host':
+            return `${args[0] || 'example.com'} has address 93.184.216.34`;
+        
+        case 'ssh':
+            return args[0] ? `Connecting to ${args[0]}... (simulated)\nIn a real system, this would establish an SSH connection.` : 'ssh: falta especificar host';
+        
+        case 'scp':
+            return args.length >= 2 ? `${args[0]}    100%  1234KB   5.6MB/s   00:00` : 'scp: faltan argumentos';
+        
+        case 'rsync':
+            return args.length >= 2 ? `sending incremental file list\n${args[0]}\n\nsent 1,234 bytes  received 56 bytes  2,580.00 bytes/sec` : 'rsync: faltan argumentos';
+        
+        case 'route':
+            return `Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         172.31.0.1      0.0.0.0         UG    100    0        0 eth0
+172.31.0.0      0.0.0.0         255.255.240.0   U     100    0        0 eth0`;
+        
+        case 'service':
+            return args[1] ? `${args[0]}.service - ${args[1]}ing service` : 'service: faltan argumentos';
+        
+        case 'exit':
+        case 'logout':
+            return `<span style="color: #00ff00;">logout\n\nConnection to ip-172-31-0-1 closed.</span>`;
+        
+        case 'reboot':
+        case 'shutdown':
+            return `<span style="color: #ff0000;">Broadcast message from ec2-user@ip-172-31-0-1
+System is going down for reboot NOW!</span>`;
+        
+        case 'stat':
+            return args[0] ? `  File: ${args[0]}
+  Size: 1234      \tBlocks: 8          IO Block: 4096   regular file
+Device: ca01h/51713d\tInode: 1234567     Links: 1
+Access: (0644/-rw-r--r--)  Uid: ( 1000/ec2-user)   Gid: ( 1000/ec2-user)
+Access: 2023-10-23 15:00:00.000000000 +0000
+Modify: 2023-10-23 15:00:00.000000000 +0000
+Change: 2023-10-23 15:00:00.000000000 +0000` : 'stat: falta especificar archivo';
+        
+        case 'locate':
+            return args[0] ? `/home/ec2-user/${args[0]}\n/usr/share/doc/${args[0]}\n/var/log/${args[0]}` : 'locate: falta especificar patrón';
+        
+        case 'printf':
+            return args.join(' ');
+        
+        case 'bash':
+            return `GNU bash, version 5.2.15(1)-release (x86_64-amazon-linux-gnu)\nType 'help' for list of commands.`;
+        
+        case 'source':
+            return args[0] ? `Sourced ${args[0]}` : 'source: falta especificar archivo';
+        
+        case 'lsmem':
+            return `RANGE                                  SIZE  STATE REMOVABLE BLOCK
+0x0000000000000000-0x000000007fffffff  2.0G online       yes  0-15
+0x0000000100000000-0x000000017fffffff  2.0G online       yes 32-47
+
+Memory block size:       128M
+Total online memory:     4.0G
+Total offline memory:    0B`;
+        
+        case 'dmidecode':
+            return `# dmidecode 3.3
+BIOS Information
+        Vendor: Amazon EC2
+        Version: 1.0
+        Release Date: 10/16/2017`;
         
         default:
             return `bash: ${command}: comando no encontrado
