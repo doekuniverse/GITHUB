@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicios Prácticos - Amazon Linux CLI</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>🎯 Ejercicios Prácticos y Desafíos</h1>
+        <p class="subtitle">Pon a prueba tus conocimientos de Amazon Linux CLI</p>
+        <nav class="main-nav">
+            <a href="../index.html">🏠 Inicio</a>
+            <a href="exercises.html">🎯 Ejercicios</a>
+            <a href="simulator.html">💻 Simulador</a>
+            <a href="filesystem.html">📁 Archivos</a>
+            <a href="packages.html">📦 Paquetes</a>
+        </nav>
+    </header>
+    <main>
+        <section id="beginner">
+            <h2>🟢 Nivel Principiante</h2>
+            
+            <div class="category-card">
+                <h3>Ejercicio 1: Exploración del Sistema</h3>
+                <p><strong>Objetivo:</strong> Familiarizarse con la navegación y exploración de archivos.</p>
+                <div class="info-box">
+                    <strong>Tareas:</strong>
+                    <ol>
+                        <li>Muestra tu directorio actual</li>
+                        <li>Lista todos los archivos en /etc incluyendo ocultos</li>
+                        <li>Encuentra el tamaño del directorio /var/log</li>
+                        <li>Cuenta cuántos archivos .conf hay en /etc</li>
+                        <li>Muestra las últimas 20 líneas de /var/log/messages</li>
+                    </ol>
+                </div>
+                <div class="success-box">
+                    <strong>✅ Solución:</strong>
+                    <pre><code># 1. Directorio actual
+pwd
+
+# 2. Listar todo en /etc
+ls -la /etc
+
+# 3. Tamaño de /var/log
+du -sh /var/log
+
+# 4. Contar archivos .conf
+find /etc -name "*.conf" -type f | wc -l
+
+# 5. Últimas 20 líneas
+sudo tail -20 /var/log/messages</code></pre>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <h3>Ejercicio 2: Gestión Básica de Archivos</h3>
+                <p><strong>Objetivo:</strong> Practicar creación, copia y manipulación de archivos.</p>
+                <div class="info-box">
+                    <strong>Tareas:</strong>
+                    <ol>
+                        <li>Crea un directorio llamado "practica" en tu home</li>
+                        <li>Dentro de "practica", crea 5 archivos vacíos: file1.txt hasta file5.txt</li>
+                        <li>Copia file1.txt a file1_backup.txt</li>
+                        <li>Renombra file2.txt a renamed.txt</li>
+                        <li>Elimina file3.txt y file4.txt</li>
+                        <li>Comprime todo el directorio practica en practica.tar.gz</li>
+                    </ol>
+                </div>
+                <div class="success-box">
+                    <strong>✅ Solución:</strong>
+                    <pre><code># 1. Crear directorio
+mkdir ~/practica
+
+# 2. Crear archivos
+touch ~/practica/file{1..5}.txt
+
+# 3. Copiar
+cp ~/practica/file1.txt ~/practica/file1_backup.txt
+
+# 4. Renombrar
+mv ~/practica/file2.txt ~/practica/renamed.txt
+
+# 5. Eliminar
+rm ~/practica/file3.txt ~/practica/file4.txt
+
+# 6. Comprimir
+tar -czf practica.tar.gz ~/practica/</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="intermediate">
+            <h2>🟡 Nivel Intermedio</h2>
+            
+            <div class="category-card">
+                <h3>Ejercicio 3: Instalación y Gestión de Servicios</h3>
+                <p><strong>Objetivo:</strong> Instalar y configurar un servidor web.</p>
+                <div class="info-box">
+                    <strong>Tareas:</strong>
+                    <ol>
+                        <li>Actualiza todos los paquetes del sistema</li>
+                        <li>Instala nginx</li>
+                        <li>Inicia el servicio nginx</li>
+                        <li>Habilita nginx para que inicie automáticamente al boot</li>
+                        <li>Verifica que nginx está corriendo</li>
+                        <li>Encuentra el proceso ID (PID) de nginx</li>
+                        <li>Modifica el archivo de configuración default en /etc/nginx/nginx.conf</li>
+                        <li>Recarga la configuración sin detener el servicio</li>
+                    </ol>
+                </div>
+                <div class="success-box">
+                    <strong>✅ Solución:</strong>
+                    <pre><code># 1. Actualizar
+sudo dnf update -y
+
+# 2. Instalar nginx
+sudo dnf install nginx -y
+
+# 3. Iniciar
+sudo systemctl start nginx
+
+# 4. Habilitar
+sudo systemctl enable nginx
+
+# 5. Verificar
+systemctl status nginx
+
+# 6. Encontrar PID
+pgrep nginx
+# o
+ps aux | grep nginx
+
+# 7. Modificar config
+sudo vi /etc/nginx/nginx.conf
+
+# 8. Recargar
+sudo systemctl reload nginx</code></pre>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <h3>Ejercicio 4: Análisis de Logs</h3>
+                <p><strong>Objetivo:</strong> Analizar logs del sistema para troubleshooting.</p>
+                <div class="info-box">
+                    <strong>Tareas:</strong>
+                    <ol>
+                        <li>Encuentra todos los errores en /var/log/messages de las últimas 24 horas</li>
+                        <li>Cuenta cuántos intentos fallidos de SSH ha habido</li>
+                        <li>Lista las 10 IPs que más han intentado conectarse por SSH</li>
+                        <li>Encuentra cuándo fue el último reinicio del sistema</li>
+                        <li>Monitorea en tiempo real los logs de nginx</li>
+                    </ol>
+                </div>
+                <div class="success-box">
+                    <strong>✅ Solución:</strong>
+                    <pre><code># 1. Errores últimas 24h
+sudo journalctl --since "24 hours ago" -p err
+
+# 2. Intentos SSH fallidos
+sudo grep "Failed password" /var/log/secure | wc -l
+
+# 3. Top 10 IPs
+sudo grep "Failed password" /var/log/secure | awk '{print $(NF-3)}' | sort | uniq -c | sort -rn | head -10
+
+# 4. Último reinicio
+last reboot | head -1
+
+# 5. Monitorear nginx
+sudo tail -f /var/log/nginx/access.log</code></pre>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <h3>Ejercicio 5: Gestión de Usuarios y Permisos</h3>
+                <p><strong>Objetivo:</strong> Crear usuarios y configurar permisos correctamente.</p>
+                <div class="info-box">
+                    <strong>Tareas:</strong>
+                    <ol>
+                        <li>Crea un usuario "developer" con home directory</li>
+                        <li>Crea un grupo "webdev"</li>
+                        <li>Añade "developer" al grupo "webdev"</li>
+                        <li>Crea directorio /var/www/project</li>
+                        <li>Cambia el propietario a developer:webdev</li>
+                        <li>Establece permisos 775 en el directorio</li>
+                        <li>Da permisos sudo al usuario developer</li>
+                    </ol>
+                </div>
+                <div class="success-box">
+                    <strong>✅ Solución:</strong>
+                    <pre><code># 1. Crear usuario
+sudo useradd -m developer
+
+# 2. Crear grupo
+sudo groupadd webdev
+
+# 3. Añadir a grupo
+sudo usermod -aG webdev developer
+
+# 4. Crear directorio
+sudo mkdir -p /var/www/project
+
+# 5. Cambiar propietario
+sudo chown developer:webdev /var/www/project
+
+# 6. Permisos
+sudo chmod 775 /var/www/project
+
+# 7. Dar sudo
+sudo usermod -aG wheel developer</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="advanced">
+            <h2>🔴 Nivel Avanzado</h2>
+            
+            <div class="category-card">
+                <h3>Ejercicio 6: Configuración de Firewall y Seguridad</h3>
+                <p><strong>Objetivo:</strong> Asegurar una instancia EC2.</p>
+                <div class="info-box">
+                    <strong>Tareas:</strong>
+                    <ol>
+                        <li>Verifica el estado de SELinux</li>
+                        <li>Configura firewalld para permitir HTTP y HTTPS</li>
+                        <li>Cierra todos los puertos excepto 22, 80 y 443</li>
+                        <li>Cambia el puerto SSH default de 22 a 2222</li>
+                        <li>Deshabilita autenticación por password en SSH</li>
+                        <li>Configura fail2ban para proteger SSH</li>
+                    </ol>
+                </div>
+                <div class="success-box">
+                    <strong>✅ Solución:</strong>
+                    <pre><code># 1. Verificar SELinux
+getenforce
+sestatus
+
+# 2. Configurar firewall
+sudo firewall-cmd --add-service=http --permanent
+sudo firewall-cmd --add-service=https --permanent
+sudo firewall-cmd --reload
+
+# 3. Configuración restrictiva
+sudo firewall-cmd --remove-service=dhcpv6-client --permanent
+sudo firewall-cmd --list-all
+
+# 4. Cambiar puerto SSH
+sudo vi /etc/ssh/sshd_config
+# Cambiar: Port 2222
+sudo semanage port -a -t ssh_port_t -p tcp 2222
+sudo firewall-cmd --add-port=2222/tcp --permanent
+sudo systemctl restart sshd
+
+# 5. Deshabilitar password auth
+sudo vi /etc/ssh/sshd_config
+# Cambiar: PasswordAuthentication no
+
+# 6. Instalar fail2ban
+sudo dnf install fail2ban -y
+sudo systemctl enable --now fail2ban</code></pre>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <h3>Ejercicio 7: Script de Backup Automatizado</h3>
+                <p><strong>Objetivo:</strong> Crear un sistema de backup completo.</p>
+                <div class="info-box">
+                    <strong>Tareas:</strong>
+                    <ol>
+                        <li>Crea un script que haga backup de /var/www y /etc</li>
+                        <li>El backup debe incluir fecha en el nombre</li>
+                        <li>Debe comprimir los archivos</li>
+                        <li>Eliminar backups de más de 7 días</li>
+                        <li>Enviar log del backup a un archivo</li>
+                        <li>Programar ejecución diaria a las 2 AM con cron</li>
+                        <li>Subir backup a S3 (bonus)</li>
+                    </ol>
+                </div>
+                <div class="success-box">
+                    <strong>✅ Solución:</strong>
+                    <pre><code>#!/bin/bash
+# /usr/local/bin/backup.sh
+
+set -e
+
+BACKUP_DIR="/backup"
+DATE=$(date +%Y%m%d_%H%M%S)
+LOG_FILE="/var/log/backup.log"
+
+mkdir -p "$BACKUP_DIR"
+
+echo "$(date): Iniciando backup..." >> "$LOG_FILE"
+
+# Backup de directorios
+tar -czf "$BACKUP_DIR/www_$DATE.tar.gz" /var/www 2>> "$LOG_FILE"
+tar -czf "$BACKUP_DIR/etc_$DATE.tar.gz" /etc 2>> "$LOG_FILE"
+
+echo "$(date): Backup completado" >> "$LOG_FILE"
+
+# Limpiar backups antiguos
+find "$BACKUP_DIR" -name "*.tar.gz" -mtime +7 -delete
+
+# Bonus: Subir a S3
+# aws s3 sync "$BACKUP_DIR" s3://my-backup-bucket/
+
+echo "$(date): Limpieza completada" >> "$LOG_FILE"
+
+# Hacer ejecutable:
+# sudo chmod +x /usr/local/bin/backup.sh
+
+# Añadir a crontab:
+# crontab -e
+# 0 2 * * * /usr/local/bin/backup.sh</code></pre>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <h3>Ejercicio 8: Monitoreo y Performance Tuning</h3>
+                <p><strong>Objetivo:</strong> Diagnosticar y optimizar rendimiento del sistema.</p>
+                <div class="info-box">
+                    <strong>Tareas:</strong>
+                    <ol>
+                        <li>Identifica los 5 procesos que más CPU consumen</li>
+                        <li>Identifica los 5 procesos que más memoria consumen</li>
+                        <li>Encuentra qué está llenando el disco</li>
+                        <li>Monitorea I/O de disco en tiempo real</li>
+                        <li>Verifica conexiones de red activas</li>
+                        <li>Crea un script de monitoreo que alerte si CPU > 80%</li>
+                    </ol>
+                </div>
+                <div class="success-box">
+                    <strong>✅ Solución:</strong>
+                    <pre><code># 1. Top CPU
+ps aux --sort=-%cpu | head -6
+
+# 2. Top Memoria
+ps aux --sort=-%mem | head -6
+
+# 3. Espacio en disco
+du -sh /* | sort -rh | head -10
+
+# 4. Monitor I/O
+sudo iotop -o
+
+# 5. Conexiones de red
+ss -tunap | grep ESTAB
+
+# 6. Script de monitoreo CPU
+#!/bin/bash
+# cpu_monitor.sh
+
+CPU_THRESHOLD=80
+
+while true; do
+    CPU_USAGE=$(top -bn1 | grep "Cpu(s)" | awk '{print $2}' | cut -d'%' -f1)
+    CPU_INT=${CPU_USAGE%.*}
+    
+    if [ $CPU_INT -gt $CPU_THRESHOLD ]; then
+        echo "$(date): ALERTA - CPU en ${CPU_USAGE}%"
+        # Enviar alerta
+    fi
+    
+    sleep 60
+done</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="aws-scenarios">
+            <h2>☁️ Escenarios AWS Reales</h2>
+            
+            <div class="category-card">
+                <h3>Escenario 1: Nueva Instancia EC2</h3>
+                <p><strong>Situación:</strong> Acabas de lanzar una nueva instancia EC2 y necesitas configurarla como servidor web.</p>
+                <div class="warning-box">
+                    <strong>Completa estas tareas:</strong>
+                    <ol>
+                        <li>Actualiza el sistema completamente</li>
+                        <li>Configura hostname a "webserver-prod"</li>
+                        <li>Instala y configura nginx</li>
+                        <li>Crea usuario "deployer" sin password (solo SSH key)</li>
+                        <li>Configura firewall para web</li>
+                        <li>Instala CloudWatch agent para monitoreo</li>
+                        <li>Configura backups automáticos a S3</li>
+                        <li>Habilita actualizaciones de seguridad automáticas</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <h3>Escenario 2: Volumen EBS Lleno</h3>
+                <p><strong>Situación:</strong> Tu volumen EBS está al 95% de capacidad y la aplicación está fallando.</p>
+                <div class="danger-box">
+                    <strong>Tareas urgentes:</strong>
+                    <ol>
+                        <li>Identifica qué está consumiendo espacio</li>
+                        <li>Limpia logs antiguos</li>
+                        <li>Comprime archivos grandes</li>
+                        <li>Añade un nuevo volumen EBS de 50GB</li>
+                        <li>Monta el nuevo volumen en /data</li>
+                        <li>Mueve archivos grandes al nuevo volumen</li>
+                        <li>Configura montaje automático en /etc/fstab</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="category-card">
+                <h3>Escenario 3: Instancia Comprometida</h3>
+                <p><strong>Situación:</strong> Detectaste actividad sospechosa. Necesitas investigar.</p>
+                <div class="danger-box">
+                    <strong>Investigación forense:</strong>
+                    <ol>
+                        <li>Revisa conexiones de red activas</li>
+                        <li>Identifica procesos sospechosos</li>
+                        <li>Revisa logs de autenticación SSH</li>
+                        <li>Busca archivos modificados recientemente</li>
+                        <li>Verifica crontabs de todos los usuarios</li>
+                        <li>Revisa usuarios y grupos del sistema</li>
+                        <li>Toma snapshot del volumen antes de cualquier cambio</li>
+                        <li>Aísla la instancia del tráfico de red</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section id="challenges">
+            <h2>🏆 Desafíos Finales</h2>
+            
+            <div class="category-card special">
+                <h3>Desafío Maestro: Stack LAMP Completo</h3>
+                <p><strong>Crea desde cero un stack LAMP seguro y optimizado:</strong></p>
+                <ol>
+                    <li>Instala Apache, MariaDB, PHP</li>
+                    <li>Configura virtual hosts</li>
+                    <li>Asegura MariaDB (mysql_secure_installation)</li>
+                    <li>Configura SSL con certificado autofirmado</li>
+                    <li>Implementa firewall restrictivo</li>
+                    <li>Configura SELinux correctamente</li>
+                    <li>Crea scripts de backup automatizados</li>
+                    <li>Implementa monitoreo con CloudWatch</li>
+                    <li>Configura logrotate para logs de aplicación</li>
+                    <li>Documenta todo el proceso</li>
+                </ol>
+            </div>
+
+            <div class="category-card special">
+                <h3>Desafío Automatización: Infrastructure as Code</h3>
+                <p><strong>Crea un script que automatice completamente:</strong></p>
+                <ol>
+                    <li>Detección del tipo de instancia EC2</li>
+                    <li>Instalación de software según el tipo</li>
+                    <li>Configuración de usuarios y permisos</li>
+                    <li>Setup de firewall y SELinux</li>
+                    <li>Configuración de backups a S3</li>
+                    <li>Instalación de agentes de monitoreo</li>
+                    <li>Hardening de seguridad</li>
+                    <li>Validación post-instalación</li>
+                    <li>Generación de reporte de configuración</li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="tips">
+            <h2>💡 Consejos para Practicar</h2>
+            <div class="success-box">
+                <ul>
+                    <li>✅ Practica en una instancia EC2 de desarrollo, nunca en producción</li>
+                    <li>✅ Toma snapshots antes de cambios importantes</li>
+                    <li>✅ Documenta cada paso que realices</li>
+                    <li>✅ Usa el simulador para practicar sin riesgos</li>
+                    <li>✅ Lee los mensajes de error completamente</li>
+                    <li>✅ Consulta man pages: <code>man comando</code></li>
+                    <li>✅ Usa <code>--help</code> para ver opciones: <code>comando --help</code></li>
+                    <li>✅ Practica escribiendo scripts bash</li>
+                    <li>✅ Aprende de tus errores - son la mejor forma de aprender</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>💪 ¡Practica, practica y dominarás Amazon Linux CLI!</p>
+    </footer>
+</body>
+</html>

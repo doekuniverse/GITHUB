@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comandos Intermedio - Maestro Amazon Linux</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>Comandos Intermedio</h1>
+        <nav>
+            <a href="../index.html">Inicio</a>
+            <a href="beginner.html">Principiante</a>
+            <a href="intermediate.html">Intermedio</a>
+            <a href="advanced.html">Avanzado</a>
+            <a href="simulator.html">Simulador</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Comandos Intermedios</h2>
+        <p>Ahora que dominas lo básico, explora procesos, usuarios y permisos.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Comando</th>
+                    <th>Descripción</th>
+                    <th>Ejemplo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ps</td>
+                    <td>Muestra procesos en ejecución</td>
+                    <td><code>ps aux</code></td>
+                </tr>
+                <tr>
+                    <td>top</td>
+                    <td>Monitor de procesos en tiempo real</td>
+                    <td><code>top</code></td>
+                </tr>
+                <tr>
+                    <td>kill</td>
+                    <td>Termina un proceso</td>
+                    <td><code>kill 1234</code></td>
+                </tr>
+                <tr>
+                    <td>chmod</td>
+                    <td>Cambia permisos de archivo</td>
+                    <td><code>chmod 755 archivo</code></td>
+                </tr>
+                <tr>
+                    <td>chown</td>
+                    <td>Cambia propietario</td>
+                    <td><code>chown usuario archivo</code></td>
+                </tr>
+                <tr>
+                    <td>useradd</td>
+                    <td>Añade un usuario</td>
+                    <td><code>useradd nuevo_usuario</code></td>
+                </tr>
+                <tr>
+                    <td>passwd</td>
+                    <td>Cambia contraseña</td>
+                    <td><code>passwd usuario</code></td>
+                </tr>
+                <tr>
+                    <td>grep</td>
+                    <td>Busca texto en archivos</td>
+                    <td><code>grep "palabra" archivo</code></td>
+                </tr>
+                <tr>
+                    <td>find</td>
+                    <td>Busca archivos</td>
+                    <td><code>find / -name archivo</code></td>
+                </tr>
+                <tr>
+                    <td>tar</td>
+                    <td>Comprime/descomprime archivos</td>
+                    <td><code>tar -czf archivo.tar.gz dir</code></td>
+                </tr>
+            </tbody>
+        </table>
+        <section id="tips">
+            <h3>Consejos Avanzados</h3>
+            <ul>
+                <li>Usa <code>kill -9</code> para forzar terminación.</li>
+                <li>Permisos: r=4, w=2, x=1. Total 755 para propietario full, grupo y otros read/execute.</li>
+                <li>Busca eficientemente: <code>find . -type f -name "*.log" -mtime -7</code> archivos log modificados en 7 días.</li>
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>¡Estás avanzando!</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procesos y Servicios - Amazon Linux CLI</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>⚙️ Gestión de Procesos y Servicios</h1>
+        <p class="subtitle">Domina systemd y el control de procesos en Amazon Linux</p>
+        <nav class="main-nav">
+            <a href="../index.html">🏠 Inicio</a>
+            <a href="filesystem.html">📁 Archivos</a>
+            <a href="packages.html">📦 Paquetes</a>
+            <a href="processes.html">⚙️ Procesos</a>
+            <a href="networking.html">🌐 Redes</a>
+            <a href="security.html">🔒 Seguridad</a>
+            <a href="simulator.html">💻 Simulador</a>
+        </nav>
+    </header>
+    <main>
+        <section id="intro">
+            <h2>Systemd: El Init System de Amazon Linux</h2>
+            <p>Amazon Linux usa <strong>systemd</strong> como sistema de inicialización y gestor de servicios. Systemd gestiona el arranque del sistema, servicios daemon, montajes, timers y mucho más.</p>
+            <div class="info-box">
+                <strong>💡 Conceptos Clave:</strong><br>
+                • <strong>Unit:</strong> Recurso gestionado por systemd (.service, .socket, .timer, etc.)<br>
+                • <strong>Target:</strong> Grupo de units (equivalente a runlevels)<br>
+                • <strong>Service:</strong> Proceso daemon en background
+            </div>
+        </section>
+
+        <section id="systemctl">
+            <h2>Comandos Systemctl Esenciales</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                        <th>Uso en AWS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>systemctl start</code></td>
+                        <td>Inicia un servicio</td>
+                        <td><code>sudo systemctl start nginx</code><br><code>sudo systemctl start httpd.service</code></td>
+                        <td>Iniciar web server, database</td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl stop</code></td>
+                        <td>Detiene un servicio</td>
+                        <td><code>sudo systemctl stop nginx</code></td>
+                        <td>Mantenimiento, troubleshooting</td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl restart</code></td>
+                        <td>Reinicia un servicio</td>
+                        <td><code>sudo systemctl restart nginx</code></td>
+                        <td>Aplicar cambios de configuración</td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl reload</code></td>
+                        <td>Recarga configuración sin detener</td>
+                        <td><code>sudo systemctl reload nginx</code></td>
+                        <td>Cambios de config sin downtime</td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl status</code></td>
+                        <td>Muestra estado de servicio</td>
+                        <td><code>systemctl status nginx</code><br><code>systemctl status</code> (estado general)</td>
+                        <td>Ver si servicio está corriendo, logs recientes</td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl enable</code></td>
+                        <td>Habilita inicio automático</td>
+                        <td><code>sudo systemctl enable nginx</code><br><code>sudo systemctl enable --now nginx</code> (enable + start)</td>
+                        <td>Servicios que deben iniciar al boot</td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl disable</code></td>
+                        <td>Deshabilita inicio automático</td>
+                        <td><code>sudo systemctl disable nginx</code></td>
+                        <td>Prevenir inicio automático</td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl is-active</code></td>
+                        <td>Verifica si está activo</td>
+                        <td><code>systemctl is-active nginx</code></td>
+                        <td>Scripts de monitoreo</td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl is-enabled</code></td>
+                        <td>Verifica si está habilitado</td>
+                        <td><code>systemctl is-enabled nginx</code></td>
+                        <td>Auditoría de configuración</td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl mask</code></td>
+                        <td>Impide completamente que se inicie</td>
+                        <td><code>sudo systemctl mask nginx</code></td>
+                        <td>Prevenir inicio incluso manual</td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl unmask</code></td>
+                        <td>Remueve máscara</td>
+                        <td><code>sudo systemctl unmask nginx</code></td>
+                        <td>Revertir mask</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="systemctl-list">
+            <h2>Listar y Consultar Units</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>systemctl list-units</code></td>
+                        <td>Lista units activas</td>
+                        <td><code>systemctl list-units</code><br><code>systemctl list-units --type=service</code><br><code>systemctl list-units --state=running</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl list-unit-files</code></td>
+                        <td>Lista todos los unit files</td>
+                        <td><code>systemctl list-unit-files</code><br><code>systemctl list-unit-files --type=service</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl list-dependencies</code></td>
+                        <td>Muestra dependencias de unit</td>
+                        <td><code>systemctl list-dependencies nginx</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl cat</code></td>
+                        <td>Muestra contenido del unit file</td>
+                        <td><code>systemctl cat nginx</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl show</code></td>
+                        <td>Muestra propiedades de unit</td>
+                        <td><code>systemctl show nginx</code><br><code>systemctl show -p MainPID nginx</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="system-control">
+            <h2>Control del Sistema</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                        <th>Precaución</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>systemctl reboot</code></td>
+                        <td>Reinicia el sistema</td>
+                        <td><code>sudo systemctl reboot</code></td>
+                        <td>⚠️ Apaga la instancia EC2</td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl poweroff</code></td>
+                        <td>Apaga el sistema</td>
+                        <td><code>sudo systemctl poweroff</code></td>
+                        <td>⚠️ Detiene la instancia EC2</td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl suspend</code></td>
+                        <td>Suspende el sistema</td>
+                        <td><code>sudo systemctl suspend</code></td>
+                        <td>No recomendado en EC2</td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl daemon-reload</code></td>
+                        <td>Recarga configuración de systemd</td>
+                        <td><code>sudo systemctl daemon-reload</code></td>
+                        <td>Después de modificar unit files</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="process-management">
+            <h2>Gestión de Procesos con PS</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                        <th>Información que Muestra</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>ps</code></td>
+                        <td>Muestra procesos</td>
+                        <td><code>ps</code> (procesos actuales)<br><code>ps aux</code> (todos los procesos)<br><code>ps -ef</code> (formato completo)<br><code>ps -u ec2-user</code> (por usuario)</td>
+                        <td>PID, USER, CPU%, MEM%, COMMAND</td>
+                    </tr>
+                    <tr>
+                        <td><code>ps aux --sort</code></td>
+                        <td>Ordena salida</td>
+                        <td><code>ps aux --sort=-%mem | head</code> (por memoria)<br><code>ps aux --sort=-%cpu | head</code> (por CPU)</td>
+                        <td>Procesos que más consumen recursos</td>
+                    </tr>
+                    <tr>
+                        <td><code>pgrep</code></td>
+                        <td>Busca procesos por nombre</td>
+                        <td><code>pgrep nginx</code><br><code>pgrep -u ec2-user</code></td>
+                        <td>Solo PIDs</td>
+                    </tr>
+                    <tr>
+                        <td><code>pidof</code></td>
+                        <td>Encuentra PID de programa</td>
+                        <td><code>pidof nginx</code></td>
+                        <td>PIDs de proceso específico</td>
+                    </tr>
+                    <tr>
+                        <td><code>pstree</code></td>
+                        <td>Muestra árbol de procesos</td>
+                        <td><code>pstree</code><br><code>pstree -p</code> (con PIDs)</td>
+                        <td>Jerarquía padre-hijo de procesos</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="monitoring">
+            <h2>Monitoreo Interactivo de Procesos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Teclas Útiles</th>
+                        <th>Uso en AWS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>top</code></td>
+                        <td>Monitor de procesos en tiempo real</td>
+                        <td>q (salir), k (kill), M (ordenar por MEM), P (ordenar por CPU), 1 (ver CPUs), h (ayuda)</td>
+                        <td>Monitoreo básico de rendimiento EC2</td>
+                    </tr>
+                    <tr>
+                        <td><code>htop</code></td>
+                        <td>Top mejorado (requiere instalación)</td>
+                        <td>F5 (árbol), F6 (ordenar), F9 (kill), F10 (salir)</td>
+                        <td>Interfaz más amigable que top</td>
+                    </tr>
+                    <tr>
+                        <td><code>atop</code></td>
+                        <td>Monitor avanzado con historial</td>
+                        <td>Graba histórico de rendimiento</td>
+                        <td>Post-mortem analysis</td>
+                    </tr>
+                    <tr>
+                        <td><code>glances</code></td>
+                        <td>Monitor multi-sistema</td>
+                        <td>Cliente-servidor, vista unificada</td>
+                        <td>Monitorear múltiples instancias</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="success-box">
+                <strong>💡 Instalar htop:</strong> <code>sudo dnf install htop -y</code>
+            </div>
+        </section>
+
+        <section id="kill">
+            <h2>Terminación de Procesos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                        <th>Señales Comunes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>kill</code></td>
+                        <td>Envía señal a proceso</td>
+                        <td><code>kill 1234</code> (SIGTERM)<br><code>kill -9 1234</code> (SIGKILL forzado)<br><code>kill -15 1234</code> (SIGTERM)<br><code>kill -HUP 1234</code> (recarga config)</td>
+                        <td>15=TERM, 9=KILL, 1=HUP, 2=INT</td>
+                    </tr>
+                    <tr>
+                        <td><code>killall</code></td>
+                        <td>Mata procesos por nombre</td>
+                        <td><code>killall nginx</code><br><code>killall -9 python</code></td>
+                        <td>Útil para matar múltiples instancias</td>
+                    </tr>
+                    <tr>
+                        <td><code>pkill</code></td>
+                        <td>Mata procesos por patrón</td>
+                        <td><code>pkill nginx</code><br><code>pkill -u ec2-user</code></td>
+                        <td>Más flexible que killall</td>
+                    </tr>
+                    <tr>
+                        <td><code>xkill</code></td>
+                        <td>Mata proceso con click (GUI)</td>
+                        <td><code>xkill</code></td>
+                        <td>No disponible en servidores sin X</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="danger-box">
+                <strong>⚠️ PRECAUCIÓN:</strong><br>
+                • <code>kill -9</code> (SIGKILL) no permite limpieza. Usa solo cuando -15 falla<br>
+                • Nunca hagas <code>killall systemd</code> o <code>kill -9 1</code> - destruye el sistema<br>
+                • En EC2, matar procesos críticos puede hacer la instancia inaccesible
+            </div>
+        </section>
+
+        <section id="priority">
+            <h2>Prioridad de Procesos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                        <th>Valores</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>nice</code></td>
+                        <td>Inicia proceso con prioridad</td>
+                        <td><code>nice -n 10 ./script.sh</code><br><code>nice -n -5 importante</code></td>
+                        <td>-20 (max prioridad) a 19 (min prioridad)</td>
+                    </tr>
+                    <tr>
+                        <td><code>renice</code></td>
+                        <td>Cambia prioridad de proceso activo</td>
+                        <td><code>renice -n 5 -p 1234</code><br><code>renice +10 -u ec2-user</code></td>
+                        <td>Solo root puede bajar nice value</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="background">
+            <h2>Trabajos en Background</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>&</code></td>
+                        <td>Ejecuta comando en background</td>
+                        <td><code>./script.sh &</code><br><code>sleep 100 &</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>jobs</code></td>
+                        <td>Lista trabajos en background</td>
+                        <td><code>jobs</code><br><code>jobs -l</code> (con PIDs)</td>
+                    </tr>
+                    <tr>
+                        <td><code>fg</code></td>
+                        <td>Trae trabajo a foreground</td>
+                        <td><code>fg</code> (último job)<br><code>fg %1</code> (job #1)</td>
+                    </tr>
+                    <tr>
+                        <td><code>bg</code></td>
+                        <td>Continúa trabajo en background</td>
+                        <td><code>bg %1</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Ctrl+Z</code></td>
+                        <td>Suspende proceso actual</td>
+                        <td>Presionar Ctrl+Z, luego <code>bg</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>nohup</code></td>
+                        <td>Ejecuta inmune a hangups</td>
+                        <td><code>nohup ./script.sh &</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>disown</code></td>
+                        <td>Desvincula job de shell</td>
+                        <td><code>disown %1</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="screen-tmux">
+            <h2>Multiplexores de Terminal</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Herramienta</th>
+                        <th>Comandos Básicos</th>
+                        <th>Uso en AWS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>screen</code></td>
+                        <td><code>screen</code> (nueva sesión)<br><code>screen -S nombre</code> (nombrada)<br><code>screen -ls</code> (listar)<br><code>screen -r</code> (reanudar)<br>Ctrl+A D (detach)</td>
+                        <td>Mantener sesiones SSH activas, scripts largos</td>
+                    </tr>
+                    <tr>
+                        <td><code>tmux</code></td>
+                        <td><code>tmux</code> (nueva sesión)<br><code>tmux ls</code> (listar)<br><code>tmux attach</code> (reanudar)<br>Ctrl+B D (detach)<br>Ctrl+B C (nueva ventana)</td>
+                        <td>Más moderno que screen, soporte de paneles</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="info-box">
+                <strong>💡 Instalar:</strong><br>
+                <code>sudo dnf install screen tmux -y</code>
+            </div>
+        </section>
+
+        <section id="cron">
+            <h2>Cron: Tareas Programadas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>crontab -e</code></td>
+                        <td>Edita crontab del usuario</td>
+                        <td><code>crontab -e</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>crontab -l</code></td>
+                        <td>Lista crontab actual</td>
+                        <td><code>crontab -l</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>crontab -r</code></td>
+                        <td>Elimina crontab</td>
+                        <td><code>crontab -r</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>crontab -u</code></td>
+                        <td>Gestiona crontab de otro usuario</td>
+                        <td><code>sudo crontab -u ec2-user -e</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="success-box">
+                <strong>📅 Sintaxis Cron:</strong><br>
+                <code>* * * * * comando</code><br>
+                <code>│ │ │ │ │</code><br>
+                <code>│ │ │ │ └─ Día semana (0-7, 0=Domingo)</code><br>
+                <code>│ │ │ └─── Mes (1-12)</code><br>
+                <code>│ │ └───── Día mes (1-31)</code><br>
+                <code>│ └─────── Hora (0-23)</code><br>
+                <code>└───────── Minuto (0-59)</code><br><br>
+                <strong>Ejemplos:</strong><br>
+                <code>0 2 * * * /backup.sh</code> - Diario a las 2 AM<br>
+                <code>*/15 * * * * /check.sh</code> - Cada 15 minutos<br>
+                <code>0 0 * * 0 /weekly.sh</code> - Domingos a medianoche<br>
+                <code>0 9-17 * * 1-5 /office.sh</code> - Días laborales 9-5
+            </div>
+        </section>
+
+        <section id="at">
+            <h2>AT: Tareas Programadas Una Vez</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>at</code></td>
+                        <td>Programa tarea única</td>
+                        <td><code>at 10:00 PM</code><br><code>at now + 2 hours</code><br><code>at 2:30 tomorrow</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>atq</code></td>
+                        <td>Lista tareas programadas</td>
+                        <td><code>atq</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>atrm</code></td>
+                        <td>Elimina tarea programada</td>
+                        <td><code>atrm 3</code> (job #3)</td>
+                    </tr>
+                    <tr>
+                        <td><code>batch</code></td>
+                        <td>Ejecuta cuando carga sea baja</td>
+                        <td><code>batch</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="timers">
+            <h2>Systemd Timers (Alternativa Moderna a Cron)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>systemctl list-timers</code></td>
+                        <td>Lista timers activos</td>
+                        <td><code>systemctl list-timers</code><br><code>systemctl list-timers --all</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl start timer</code></td>
+                        <td>Inicia un timer</td>
+                        <td><code>sudo systemctl start backup.timer</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>systemctl enable timer</code></td>
+                        <td>Habilita timer al boot</td>
+                        <td><code>sudo systemctl enable backup.timer</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="exercise">
+            <h2>🎯 Ejercicio Práctico</h2>
+            <div class="success-box">
+                <h3>Desafío: Gestiona Servicios Web</h3>
+                <pre><code># 1. Instala y configura nginx
+sudo dnf install nginx -y
+sudo systemctl start nginx
+sudo systemctl enable nginx
+systemctl status nginx
+
+# 2. Verifica procesos
+ps aux | grep nginx
+pgrep nginx
+
+# 3. Monitorea en tiempo real
+top
+# Presiona 'M' para ordenar por memoria
+
+# 4. Crea cron job para limpiar logs
+crontab -e
+# Añade: 0 3 * * * find /var/log/nginx -name "*.log" -mtime +30 -delete
+
+# 5. Ver timers de systemd
+systemctl list-timers</code></pre>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>💪 Domina la gestión de procesos en Amazon Linux</p>
+    </footer>
+</body>
+</html>

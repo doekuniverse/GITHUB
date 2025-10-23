@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Archivos - Amazon Linux CLI</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>📁 Sistema de Archivos y Navegación</h1>
+        <p class="subtitle">Domina todos los comandos de gestión de archivos en Amazon Linux</p>
+        <nav class="main-nav">
+            <a href="../index.html">🏠 Inicio</a>
+            <a href="filesystem.html">📁 Sistema de Archivos</a>
+            <a href="packages.html">📦 Paquetes</a>
+            <a href="users.html">👥 Usuarios</a>
+            <a href="processes.html">⚙️ Procesos</a>
+            <a href="networking.html">🌐 Redes</a>
+            <a href="simulator.html">💻 Simulador</a>
+        </nav>
+    </header>
+    <main>
+        <section id="intro">
+            <h2>Navegación y Gestión de Archivos</h2>
+            <p>El sistema de archivos de Amazon Linux sigue la estructura jerárquica FHS (Filesystem Hierarchy Standard). Todo comienza desde la raíz <code>/</code> y se organiza en directorios especializados.</p>
+            <div class="info-box">
+                <strong>💡 Dato Importante:</strong> Amazon Linux usa ext4 y xfs como sistemas de archivos predeterminados. Conocer estos comandos te permite gestionar instancias EC2 eficientemente.
+            </div>
+        </section>
+
+        <section id="navigation">
+            <h2>Comandos de Navegación Básica</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                        <th>Opciones Clave</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>pwd</code></td>
+                        <td>Muestra el directorio actual (Print Working Directory)</td>
+                        <td><code>pwd</code><br><code>pwd -P</code> (ruta física sin symlinks)</td>
+                        <td>-P (física), -L (lógica)</td>
+                    </tr>
+                    <tr>
+                        <td><code>cd</code></td>
+                        <td>Cambia de directorio (Change Directory)</td>
+                        <td><code>cd /var/log</code><br><code>cd ~</code> (ir a HOME)<br><code>cd -</code> (directorio anterior)<br><code>cd ..</code> (subir un nivel)</td>
+                        <td>~ (home), - (anterior), .. (padre)</td>
+                    </tr>
+                    <tr>
+                        <td><code>ls</code></td>
+                        <td>Lista archivos y directorios</td>
+                        <td><code>ls -la</code> (detallado + ocultos)<br><code>ls -lh</code> (tamaños legibles)<br><code>ls -lt</code> (ordenado por tiempo)<br><code>ls -lS</code> (ordenado por tamaño)</td>
+                        <td>-l (largo), -a (todos), -h (humano), -t (tiempo), -r (reverso), -R (recursivo)</td>
+                    </tr>
+                    <tr>
+                        <td><code>tree</code></td>
+                        <td>Muestra estructura de directorios en árbol</td>
+                        <td><code>tree</code><br><code>tree -L 2</code> (2 niveles)<br><code>tree -d</code> (solo directorios)</td>
+                        <td>-L (nivel), -d (dirs), -a (todos)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="file-operations">
+            <h2>Creación y Manipulación de Archivos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                        <th>Uso Común en AWS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>touch</code></td>
+                        <td>Crea archivo vacío o actualiza timestamp</td>
+                        <td><code>touch archivo.txt</code><br><code>touch -t 202310221500 file</code> (timestamp específico)</td>
+                        <td>Crear archivos de configuración, logs vacíos</td>
+                    </tr>
+                    <tr>
+                        <td><code>mkdir</code></td>
+                        <td>Crea directorios</td>
+                        <td><code>mkdir directorio</code><br><code>mkdir -p /path/to/deep/dir</code> (crea padres)<br><code>mkdir -m 755 dir</code> (con permisos)</td>
+                        <td>Organizar logs, datos de aplicaciones</td>
+                    </tr>
+                    <tr>
+                        <td><code>cp</code></td>
+                        <td>Copia archivos y directorios</td>
+                        <td><code>cp origen destino</code><br><code>cp -r dir1 dir2</code> (recursivo)<br><code>cp -p file new</code> (preserva atributos)<br><code>cp -u src dst</code> (solo si más nuevo)</td>
+                        <td>Backup de configs, copiar datos entre volúmenes EBS</td>
+                    </tr>
+                    <tr>
+                        <td><code>mv</code></td>
+                        <td>Mueve o renombra archivos</td>
+                        <td><code>mv viejo nuevo</code><br><code>mv archivo /path/</code><br><code>mv -i file dest</code> (interactivo)<br><code>mv -n</code> (no sobrescribir)</td>
+                        <td>Reorganizar logs, renombrar configs</td>
+                    </tr>
+                    <tr>
+                        <td><code>rm</code></td>
+                        <td>Elimina archivos y directorios</td>
+                        <td><code>rm archivo</code><br><code>rm -r directorio</code> (recursivo)<br><code>rm -f</code> (forzar)<br><code>rm -i</code> (interactivo)</td>
+                        <td>Limpiar logs antiguos, eliminar temporales</td>
+                    </tr>
+                    <tr>
+                        <td><code>rmdir</code></td>
+                        <td>Elimina directorios vacíos</td>
+                        <td><code>rmdir dir_vacio</code><br><code>rmdir -p a/b/c</code> (elimina jerarquía vacía)</td>
+                        <td>Limpiar estructuras de directorios vacías</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="danger-box">
+                <strong>⚠️ PRECAUCIÓN:</strong> <code>rm -rf /</code> puede destruir todo el sistema. Siempre verifica dos veces antes de usar <code>rm -rf</code>. En EC2, esto podría eliminar datos críticos de tu instancia.
+            </div>
+        </section>
+
+        <section id="viewing">
+            <h2>Visualización de Contenido</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                        <th>Cuándo Usar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>cat</code></td>
+                        <td>Muestra contenido completo de archivo</td>
+                        <td><code>cat archivo.txt</code><br><code>cat file1 file2 > combined</code> (concatenar)<br><code>cat -n file</code> (con números de línea)</td>
+                        <td>Archivos pequeños, configs</td>
+                    </tr>
+                    <tr>
+                        <td><code>less</code></td>
+                        <td>Visualizador paginado (recomendado)</td>
+                        <td><code>less archivo</code><br><code>less +F file</code> (modo follow)<br>Navegación: espacio (adelante), b (atrás), /búsqueda, q (salir)</td>
+                        <td>Logs grandes, documentación</td>
+                    </tr>
+                    <tr>
+                        <td><code>more</code></td>
+                        <td>Visualizador paginado básico</td>
+                        <td><code>more archivo</code></td>
+                        <td>Preferir <code>less</code> en su lugar</td>
+                    </tr>
+                    <tr>
+                        <td><code>head</code></td>
+                        <td>Muestra primeras líneas de archivo</td>
+                        <td><code>head archivo</code> (10 líneas default)<br><code>head -n 20 file</code> (20 líneas)<br><code>head -c 100 file</code> (100 bytes)</td>
+                        <td>Ver inicio de logs, headers de CSV</td>
+                    </tr>
+                    <tr>
+                        <td><code>tail</code></td>
+                        <td>Muestra últimas líneas de archivo</td>
+                        <td><code>tail archivo</code><br><code>tail -n 50 file</code> (50 líneas)<br><code>tail -f log</code> (seguir en tiempo real)<br><code>tail -F log</code> (sigue rotación)</td>
+                        <td>Monitorear logs en tiempo real</td>
+                    </tr>
+                    <tr>
+                        <td><code>tac</code></td>
+                        <td>Cat invertido (muestra de abajo hacia arriba)</td>
+                        <td><code>tac archivo</code></td>
+                        <td>Ver logs en orden inverso</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="search">
+            <h2>Búsqueda de Archivos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos Avanzados</th>
+                        <th>Casos de Uso AWS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>find</code></td>
+                        <td>Búsqueda potente de archivos</td>
+                        <td><code>find /var -name "*.log"</code><br><code>find . -type f -size +100M</code> (>100MB)<br><code>find . -mtime -7</code> (modificados últimos 7 días)<br><code>find . -user ec2-user</code><br><code>find . -perm 644</code><br><code>find . -name "*.tmp" -delete</code></td>
+                        <td>Encontrar logs antiguos, archivos grandes que consumen EBS</td>
+                    </tr>
+                    <tr>
+                        <td><code>locate</code></td>
+                        <td>Búsqueda rápida por base de datos</td>
+                        <td><code>locate archivo</code><br><code>locate -i name</code> (case-insensitive)<br><code>updatedb</code> (actualizar BD)</td>
+                        <td>Búsqueda rápida de binarios, configs</td>
+                    </tr>
+                    <tr>
+                        <td><code>which</code></td>
+                        <td>Encuentra ubicación de ejecutables</td>
+                        <td><code>which python3</code><br><code>which -a python</code> (todas las rutas)</td>
+                        <td>Verificar qué versión de comando se ejecuta</td>
+                    </tr>
+                    <tr>
+                        <td><code>whereis</code></td>
+                        <td>Localiza binarios, fuentes y manuales</td>
+                        <td><code>whereis nginx</code><br><code>whereis -b python</code> (solo binarios)</td>
+                        <td>Encontrar todos los archivos relacionados con un programa</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="success-box">
+                <strong>💡 Tip Pro:</strong> Combina <code>find</code> con <code>xargs</code>:<br>
+                <code>find /var/log -name "*.log" -mtime +30 | xargs rm</code> - Elimina logs de más de 30 días
+            </div>
+        </section>
+
+        <section id="permissions">
+            <h2>Permisos y Propiedades</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos Detallados</th>
+                        <th>Permisos Comunes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>chmod</code></td>
+                        <td>Cambia permisos de archivos</td>
+                        <td><code>chmod 755 script.sh</code><br><code>chmod u+x file</code> (añade ejecución al usuario)<br><code>chmod g-w file</code> (quita escritura al grupo)<br><code>chmod -R 644 dir/</code> (recursivo)</td>
+                        <td>755 (rwxr-xr-x), 644 (rw-r--r--), 600 (rw-------), 777 (rwxrwxrwx)</td>
+                    </tr>
+                    <tr>
+                        <td><code>chown</code></td>
+                        <td>Cambia propietario y grupo</td>
+                        <td><code>chown ec2-user file</code><br><code>chown ec2-user:ec2-user file</code><br><code>chown -R user:group dir/</code><br><code>chown --reference=ref file</code></td>
+                        <td>Asignar archivos a usuarios de aplicación</td>
+                    </tr>
+                    <tr>
+                        <td><code>chgrp</code></td>
+                        <td>Cambia solo el grupo</td>
+                        <td><code>chgrp developers file</code><br><code>chgrp -R www-data /var/www</code></td>
+                        <td>Compartir archivos entre usuarios del mismo grupo</td>
+                    </tr>
+                    <tr>
+                        <td><code>umask</code></td>
+                        <td>Establece permisos por defecto</td>
+                        <td><code>umask</code> (ver actual)<br><code>umask 022</code> (archivos 644, dirs 755)<br><code>umask 077</code> (archivos 600, dirs 700)</td>
+                        <td>Controlar seguridad de nuevos archivos</td>
+                    </tr>
+                    <tr>
+                        <td><code>stat</code></td>
+                        <td>Muestra información detallada de archivo</td>
+                        <td><code>stat archivo</code><br><code>stat -f /</code> (info del filesystem)</td>
+                        <td>Ver timestamps completos, inodes, permisos octales</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="info-box">
+                <strong>📖 Referencia de Permisos:</strong><br>
+                r (read) = 4, w (write) = 2, x (execute) = 1<br>
+                Ejemplo: 755 = rwxr-xr-x = Usuario(7=4+2+1), Grupo(5=4+1), Otros(5=4+1)
+            </div>
+        </section>
+
+        <section id="links">
+            <h2>Enlaces Simbólicos y Duros</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                        <th>Diferencias</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>ln -s</code></td>
+                        <td>Crea enlace simbólico (symlink)</td>
+                        <td><code>ln -s /path/original /path/link</code><br><code>ln -sf target link</code> (forzar)</td>
+                        <td>Como acceso directo, puede cruzar filesystems, se rompe si se mueve el original</td>
+                    </tr>
+                    <tr>
+                        <td><code>ln</code></td>
+                        <td>Crea enlace duro (hard link)</td>
+                        <td><code>ln original hardlink</code></td>
+                        <td>Misma data en disco, no puede cruzar filesystems, no se rompe si se mueve</td>
+                    </tr>
+                    <tr>
+                        <td><code>readlink</code></td>
+                        <td>Lee el destino de un symlink</td>
+                        <td><code>readlink link</code><br><code>readlink -f link</code> (ruta completa)</td>
+                        <td>Útil para scripts que siguen enlaces</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="compression">
+            <h2>Compresión y Archivado</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos Completos</th>
+                        <th>Uso en AWS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>tar</code></td>
+                        <td>Archivador de archivos</td>
+                        <td><code>tar -czf archivo.tar.gz dir/</code> (crear gzip)<br><code>tar -xzf archivo.tar.gz</code> (extraer gzip)<br><code>tar -cjf archivo.tar.bz2 dir/</code> (bzip2)<br><code>tar -tf archivo.tar.gz</code> (listar contenido)<br><code>tar -xzf file.tar.gz -C /destino</code></td>
+                        <td>Backup antes de snapshot EBS, empaquetar aplicaciones</td>
+                    </tr>
+                    <tr>
+                        <td><code>gzip</code></td>
+                        <td>Comprime archivos</td>
+                        <td><code>gzip archivo</code><br><code>gzip -d archivo.gz</code> (descomprimir)<br><code>gzip -k archivo</code> (mantener original)<br><code>gzip -9 archivo</code> (máxima compresión)</td>
+                        <td>Comprimir logs antes de S3</td>
+                    </tr>
+                    <tr>
+                        <td><code>gunzip</code></td>
+                        <td>Descomprime gzip</td>
+                        <td><code>gunzip archivo.gz</code></td>
+                        <td>Equivalente a <code>gzip -d</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>bzip2</code></td>
+                        <td>Compresión más eficiente</td>
+                        <td><code>bzip2 archivo</code><br><code>bzip2 -d archivo.bz2</code></td>
+                        <td>Mayor compresión que gzip, más lento</td>
+                    </tr>
+                    <tr>
+                        <td><code>zip</code></td>
+                        <td>Comprime en formato ZIP</td>
+                        <td><code>zip archivo.zip files</code><br><code>zip -r archivo.zip dir/</code> (recursivo)</td>
+                        <td>Compatibilidad con Windows</td>
+                    </tr>
+                    <tr>
+                        <td><code>unzip</code></td>
+                        <td>Descomprime ZIP</td>
+                        <td><code>unzip archivo.zip</code><br><code>unzip -l archivo.zip</code> (listar)<br><code>unzip archivo.zip -d /destino</code></td>
+                        <td>Extraer archivos de S3 en ZIP</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="disk-usage">
+            <h2>Uso de Disco y Espacio</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                        <th>Monitoreo en EC2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>df</code></td>
+                        <td>Muestra espacio en filesystems</td>
+                        <td><code>df -h</code> (formato humano)<br><code>df -i</code> (inodes)<br><code>df -T</code> (tipo de filesystem)</td>
+                        <td>Monitorear capacidad de volúmenes EBS</td>
+                    </tr>
+                    <tr>
+                        <td><code>du</code></td>
+                        <td>Uso de disco por directorio</td>
+                        <td><code>du -sh directorio</code> (resumen)<br><code>du -h --max-depth=1</code> (1 nivel)<br><code>du -ah | sort -rh | head -20</code> (top 20)</td>
+                        <td>Encontrar qué consume espacio en EBS</td>
+                    </tr>
+                    <tr>
+                        <td><code>ncdu</code></td>
+                        <td>Analizador interactivo de disco</td>
+                        <td><code>ncdu /var</code> (requiere instalación)</td>
+                        <td>Análisis visual de uso de disco</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="warning-box">
+                <strong>⚠️ Alerta EBS:</strong> Monitorea el espacio regularmente con <code>df -h</code>. Un volumen EBS lleno puede hacer que tu instancia EC2 se vuelva inaccesible.
+            </div>
+        </section>
+
+        <section id="misc">
+            <h2>Comandos Misceláneos Útiles</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>file</code></td>
+                        <td>Determina tipo de archivo</td>
+                        <td><code>file archivo</code><br><code>file *</code> (todos en directorio)</td>
+                    </tr>
+                    <tr>
+                        <td><code>basename</code></td>
+                        <td>Extrae nombre de archivo de ruta</td>
+                        <td><code>basename /path/to/file.txt</code> → file.txt</td>
+                    </tr>
+                    <tr>
+                        <td><code>dirname</code></td>
+                        <td>Extrae directorio de ruta</td>
+                        <td><code>dirname /path/to/file.txt</code> → /path/to</td>
+                    </tr>
+                    <tr>
+                        <td><code>realpath</code></td>
+                        <td>Muestra ruta absoluta</td>
+                        <td><code>realpath archivo</code><br><code>realpath ../dir</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="practice">
+            <h2>🎯 Ejercicio Práctico</h2>
+            <div class="success-box">
+                <h3>Desafío: Organiza un Sistema de Logs</h3>
+                <ol>
+                    <li>Crea estructura: <code>mkdir -p /tmp/logs/{app,system,nginx}</code></li>
+                    <li>Crea logs de ejemplo: <code>touch /tmp/logs/app/app{1..5}.log</code></li>
+                    <li>Encuentra logs grandes: <code>find /var/log -type f -size +10M</code></li>
+                    <li>Comprime logs antiguos: <code>find /var/log -name "*.log" -mtime +7 -exec gzip {} \;</code></li>
+                    <li>Verifica espacio: <code>du -sh /var/log</code></li>
+                </ol>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>💪 Domina el sistema de archivos de Amazon Linux</p>
+    </footer>
+</body>
+</html>

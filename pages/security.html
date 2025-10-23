@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguridad - Amazon Linux CLI</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>🔒 Seguridad y Firewall</h1>
+        <p class="subtitle">Hardening y protección en Amazon Linux</p>
+        <nav class="main-nav">
+            <a href="../index.html">🏠 Inicio</a>
+            <a href="security.html">🔒 Seguridad</a>
+            <a href="networking.html">🌐 Redes</a>
+            <a href="monitoring.html">📊 Monitoreo</a>
+            <a href="simulator.html">💻 Simulador</a>
+        </nav>
+    </header>
+    <main>
+        <section id="firewall">
+            <h2>Firewall con firewalld</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>firewall-cmd --state</code></td>
+                        <td>Verifica estado</td>
+                        <td><code>firewall-cmd --state</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>firewall-cmd --list-all</code></td>
+                        <td>Lista configuración</td>
+                        <td><code>sudo firewall-cmd --list-all</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>firewall-cmd --add-port</code></td>
+                        <td>Abre puerto</td>
+                        <td><code>sudo firewall-cmd --add-port=80/tcp</code><br><code>sudo firewall-cmd --add-port=80/tcp --permanent</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>firewall-cmd --add-service</code></td>
+                        <td>Añade servicio</td>
+                        <td><code>sudo firewall-cmd --add-service=http --permanent</code><br><code>sudo firewall-cmd --add-service=https --permanent</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>firewall-cmd --remove-port</code></td>
+                        <td>Cierra puerto</td>
+                        <td><code>sudo firewall-cmd --remove-port=8080/tcp --permanent</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>firewall-cmd --reload</code></td>
+                        <td>Recarga configuración</td>
+                        <td><code>sudo firewall-cmd --reload</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="warning-box">
+                <strong>⚠️ En AWS EC2:</strong> firewalld es adicional a Security Groups. Los Security Groups filtran en el nivel de red virtual de AWS, firewalld filtra en el OS.
+            </div>
+        </section>
+
+        <section id="selinux">
+            <h2>SELinux</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>getenforce</code></td>
+                        <td>Ver modo SELinux</td>
+                        <td><code>getenforce</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>setenforce</code></td>
+                        <td>Cambia modo temporal</td>
+                        <td><code>sudo setenforce 0</code> (Permissive)<br><code>sudo setenforce 1</code> (Enforcing)</td>
+                    </tr>
+                    <tr>
+                        <td><code>sestatus</code></td>
+                        <td>Estado de SELinux</td>
+                        <td><code>sestatus</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>chcon</code></td>
+                        <td>Cambia contexto SELinux</td>
+                        <td><code>sudo chcon -t httpd_sys_content_t /var/www/html/index.html</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>restorecon</code></td>
+                        <td>Restaura contexto default</td>
+                        <td><code>sudo restorecon -Rv /var/www/html</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>ls -Z</code></td>
+                        <td>Ver contextos SELinux</td>
+                        <td><code>ls -Z archivo</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>ps -Z</code></td>
+                        <td>Ver procesos con contexto</td>
+                        <td><code>ps -eZ</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="ssl">
+            <h2>Certificados y OpenSSL</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>openssl genrsa</code></td>
+                        <td>Genera clave privada</td>
+                        <td><code>openssl genrsa -out private.key 2048</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>openssl req</code></td>
+                        <td>Crea CSR/certificado</td>
+                        <td><code>openssl req -new -key private.key -out request.csr</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>openssl x509</code></td>
+                        <td>Gestiona certificados X.509</td>
+                        <td><code>openssl x509 -in cert.pem -text -noout</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>openssl s_client</code></td>
+                        <td>Cliente SSL/TLS</td>
+                        <td><code>openssl s_client -connect google.com:443</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="security-tools">
+            <h2>Herramientas de Seguridad</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Herramienta</th>
+                        <th>Descripción</th>
+                        <th>Instalación/Uso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>fail2ban</code></td>
+                        <td>Protección contra brute force</td>
+                        <td><code>sudo dnf install fail2ban</code><br><code>sudo systemctl enable fail2ban</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>aide</code></td>
+                        <td>Detección de intrusiones</td>
+                        <td><code>sudo dnf install aide</code><br><code>sudo aide --init</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>rkhunter</code></td>
+                        <td>Busca rootkits</td>
+                        <td><code>sudo dnf install rkhunter</code><br><code>sudo rkhunter --check</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>lynis</code></td>
+                        <td>Auditoría de seguridad</td>
+                        <td><code>sudo dnf install lynis</code><br><code>sudo lynis audit system</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="ssh">
+            <h2>Hardening SSH</h2>
+            <div class="success-box">
+                <strong>Mejores prácticas SSH en EC2:</strong>
+                <pre><code># Editar /etc/ssh/sshd_config
+sudo vi /etc/ssh/sshd_config
+
+# Cambios recomendados:
+PermitRootLogin no
+PasswordAuthentication no
+PubkeyAuthentication yes
+Port 2222 # Cambiar puerto default
+MaxAuthTries 3
+
+# Reiniciar SSH
+sudo systemctl restart sshd</code></pre>
+            </div>
+        </section>
+
+        <section id="exercise">
+            <h2>🎯 Ejercicio Práctico</h2>
+            <div class="success-box">
+                <pre><code># 1. Configurar firewall
+sudo firewall-cmd --add-service=http --permanent
+sudo firewall-cmd --add-service=https --permanent
+sudo firewall-cmd --reload
+
+# 2. Verificar SELinux
+getenforce
+sestatus
+
+# 3. Auditoría de seguridad
+sudo lynis audit system --quick</code></pre>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>💪 Asegura tu instancia Amazon Linux</p>
+    </footer>
+</body>
+</html>

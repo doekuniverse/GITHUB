@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automatización - Amazon Linux CLI</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>🤖 Automatización y Scripting</h1>
+        <p class="subtitle">Bash scripting y automatización de tareas en Amazon Linux</p>
+        <nav class="main-nav">
+            <a href="../index.html">🏠 Inicio</a>
+            <a href="automation.html">🤖 Automatización</a>
+            <a href="processes.html">⚙️ Procesos</a>
+            <a href="text.html">📝 Texto</a>
+            <a href="simulator.html">💻 Simulador</a>
+        </nav>
+    </header>
+    <main>
+        <section id="bash-basics">
+            <h2>Fundamentos de Bash Scripting</h2>
+            <div class="info-box">
+                <strong>Script básico:</strong>
+                <pre><code>#!/bin/bash
+# Mi primer script
+
+echo "Hola, soy $USER"
+echo "Fecha actual: $(date)"
+echo "Directorio: $(pwd)"</code></pre>
+                <strong>Hacer ejecutable:</strong><br>
+                <code>chmod +x script.sh</code><br>
+                <strong>Ejecutar:</strong><br>
+                <code>./script.sh</code>
+            </div>
+        </section>
+
+        <section id="variables">
+            <h2>Variables y Parámetros</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Concepto</th>
+                        <th>Sintaxis</th>
+                        <th>Ejemplo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Declarar variable</td>
+                        <td><code>VAR=valor</code></td>
+                        <td><code>NAME="Juan"</code><br><code>COUNT=10</code></td>
+                    </tr>
+                    <tr>
+                        <td>Usar variable</td>
+                        <td><code>$VAR</code> o <code>${VAR}</code></td>
+                        <td><code>echo $NAME</code><br><code>echo ${NAME}</code></td>
+                    </tr>
+                    <tr>
+                        <td>Argumentos del script</td>
+                        <td><code>$1, $2, ..., $9</code></td>
+                        <td><code>echo "Primer arg: $1"</code></td>
+                    </tr>
+                    <tr>
+                        <td>Variables especiales</td>
+                        <td><code>$0, $#, $@, $?</code></td>
+                        <td><code>$0</code> (nombre script)<br><code>$#</code> (cantidad args)<br><code>$@</code> (todos args)<br><code>$?</code> (exit code anterior)</td>
+                    </tr>
+                    <tr>
+                        <td>Command substitution</td>
+                        <td><code>$(comando)</code></td>
+                        <td><code>DATE=$(date)</code><br><code>FILES=$(ls)</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="conditionals">
+            <h2>Condicionales</h2>
+            <div class="success-box">
+                <strong>Estructura if:</strong>
+                <pre><code>#!/bin/bash
+
+if [ $1 -gt 10 ]; then
+    echo "Mayor que 10"
+elif [ $1 -eq 10 ]; then
+    echo "Igual a 10"
+else
+    echo "Menor que 10"
+fi</code></pre>
+
+                <strong>Operadores de comparación:</strong><br>
+                • Numéricos: <code>-eq</code> (igual), <code>-ne</code> (no igual), <code>-gt</code> (mayor), <code>-lt</code> (menor), <code>-ge</code> (≥), <code>-le</code> (≤)<br>
+                • Strings: <code>=</code> (igual), <code>!=</code> (diferente), <code>-z</code> (vacío), <code>-n</code> (no vacío)<br>
+                • Archivos: <code>-f</code> (existe archivo), <code>-d</code> (existe dir), <code>-r</code> (readable), <code>-w</code> (writable), <code>-x</code> (ejecutable)
+            </div>
+        </section>
+
+        <section id="loops">
+            <h2>Bucles</h2>
+            <div class="info-box">
+                <strong>For loop:</strong>
+                <pre><code>#!/bin/bash
+
+# Iterar sobre lista
+for i in 1 2 3 4 5; do
+    echo "Número: $i"
+done
+
+# Iterar sobre archivos
+for file in *.txt; do
+    echo "Procesando $file"
+done
+
+# Estilo C
+for ((i=0; i<10; i++)); do
+    echo "Contador: $i"
+done</code></pre>
+
+                <strong>While loop:</strong>
+                <pre><code>#!/bin/bash
+
+counter=0
+while [ $counter -lt 5 ]; do
+    echo "Counter: $counter"
+    ((counter++))
+done</code></pre>
+
+                <strong>Until loop:</strong>
+                <pre><code>#!/bin/bash
+
+counter=0
+until [ $counter -ge 5 ]; do
+    echo "Counter: $counter"
+    ((counter++))
+done</code></pre>
+            </div>
+        </section>
+
+        <section id="functions">
+            <h2>Funciones</h2>
+            <div class="success-box">
+                <strong>Definir y usar funciones:</strong>
+                <pre><code>#!/bin/bash
+
+# Definir función
+saludar() {
+    echo "Hola $1!"
+}
+
+backup_logs() {
+    local source=$1
+    local dest=$2
+    tar -czf "$dest/logs_$(date +%Y%m%d).tar.gz" "$source"
+    echo "Backup completado"
+}
+
+# Usar funciones
+saludar "Juan"
+backup_logs "/var/log" "/backup"</code></pre>
+            </div>
+        </section>
+
+        <section id="file-operations">
+            <h2>Operaciones con Archivos en Scripts</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Operación</th>
+                        <th>Código</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Verificar si archivo existe</td>
+                        <td><code>if [ -f "$FILE" ]; then echo "Existe"; fi</code></td>
+                    </tr>
+                    <tr>
+                        <td>Leer archivo línea por línea</td>
+                        <td><code>while IFS= read -r line; do echo "$line"; done < file.txt</code></td>
+                    </tr>
+                    <tr>
+                        <td>Escribir a archivo</td>
+                        <td><code>echo "texto" > file</code> (sobrescribir)<br><code>echo "texto" >> file</code> (append)</td>
+                    </tr>
+                    <tr>
+                        <td>Redirigir stderr</td>
+                        <td><code>comando 2> error.log</code><br><code>comando &> all.log</code> (stdout+stderr)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="error-handling">
+            <h2>Manejo de Errores</h2>
+            <div class="warning-box">
+                <strong>Best practices:</strong>
+                <pre><code>#!/bin/bash
+
+# Salir en cualquier error
+set -e
+
+# Salir si variable no definida
+set -u
+
+# Prevenir errores en pipes
+set -o pipefail
+
+# Función de error
+error_exit() {
+    echo "ERROR: $1" >&2
+    exit 1
+}
+
+# Usar
+command || error_exit "Comando falló"
+
+# Verificar exit code
+if ! comando; then
+    echo "El comando falló"
+    exit 1
+fi</code></pre>
+            </div>
+        </section>
+
+        <section id="common-scripts">
+            <h2>Scripts Comunes para AWS EC2</h2>
+            
+            <h3>1. Backup Automático</h3>
+            <pre><code>#!/bin/bash
+# backup.sh - Backup de directorios importantes
+
+BACKUP_DIR="/backup"
+DATE=$(date +%Y%m%d_%H%M%S)
+DIRS_TO_BACKUP="/var/www /etc/nginx"
+
+mkdir -p "$BACKUP_DIR"
+
+for dir in $DIRS_TO_BACKUP; do
+    if [ -d "$dir" ]; then
+        tar -czf "$BACKUP_DIR/$(basename $dir)_$DATE.tar.gz" "$dir"
+        echo "Backup de $dir completado"
+    fi
+done
+
+# Eliminar backups antiguos (más de 7 días)
+find "$BACKUP_DIR" -name "*.tar.gz" -mtime +7 -delete</code></pre>
+
+            <h3>2. Monitor de Disco</h3>
+            <pre><code>#!/bin/bash
+# disk_monitor.sh - Alerta si disco lleno
+
+THRESHOLD=80
+
+df -H | grep -vE '^Filesystem|tmpfs|cdrom' | awk '{ print $5 " " $1 }' | while read output;
+do
+    usage=$(echo $output | awk '{ print $1}' | sed 's/%//g')
+    partition=$(echo $output | awk '{ print $2 }')
+    
+    if [ $usage -ge $THRESHOLD ]; then
+        echo "ALERTA: Partición $partition en ${usage}% de uso"
+        # Aquí podrías enviar email o SNS notification
+    fi
+done</code></pre>
+
+            <h3>3. Verificador de Servicios</h3>
+            <pre><code>#!/bin/bash
+# service_check.sh - Verifica y reinicia servicios
+
+SERVICES="nginx httpd mariadb"
+
+for service in $SERVICES; do
+    if ! systemctl is-active --quiet $service; then
+        echo "$(date): $service está caído, reiniciando..."
+        systemctl start $service
+        
+        if systemctl is-active --quiet $service; then
+            echo "$(date): $service reiniciado exitosamente"
+        else
+            echo "$(date): ERROR: No se pudo reiniciar $service"
+        fi
+    fi
+done</code></pre>
+
+            <h3>4. Limpieza de Logs</h3>
+            <pre><code>#!/bin/bash
+# log_cleanup.sh - Limpia y comprime logs antiguos
+
+LOG_DIRS="/var/log/nginx /var/log/httpd /var/log/app"
+DAYS_OLD=7
+
+for dir in $LOG_DIRS; do
+    if [ -d "$dir" ]; then
+        # Comprimir logs de más de 7 días
+        find "$dir" -name "*.log" -mtime +$DAYS_OLD -exec gzip {} \;
+        
+        # Eliminar logs comprimidos de más de 30 días
+        find "$dir" -name "*.gz" -mtime +30 -delete
+        
+        echo "Limpieza de $dir completada"
+    fi
+done</code></pre>
+        </section>
+
+        <section id="scheduling">
+            <h2>Programación con Cron</h2>
+            <div class="info-box">
+                <strong>Añadir scripts a crontab:</strong>
+                <pre><code># Editar crontab
+crontab -e
+
+# Ejemplos de programación
+0 2 * * * /scripts/backup.sh              # Diario a las 2 AM
+*/15 * * * * /scripts/service_check.sh    # Cada 15 minutos
+0 3 * * 0 /scripts/log_cleanup.sh         # Domingos a las 3 AM
+0 */4 * * * /scripts/disk_monitor.sh      # Cada 4 horas</code></pre>
+            </div>
+        </section>
+
+        <section id="aws-cli">
+            <h2>Integración con AWS CLI</h2>
+            <div class="success-box">
+                <strong>Scripts para AWS:</strong>
+                <pre><code>#!/bin/bash
+# aws_backup_to_s3.sh
+
+BUCKET="my-backup-bucket"
+BACKUP_FILE="/tmp/backup_$(date +%Y%m%d).tar.gz"
+
+# Crear backup
+tar -czf "$BACKUP_FILE" /var/www
+
+# Subir a S3
+aws s3 cp "$BACKUP_FILE" "s3://$BUCKET/"
+
+# Limpiar
+rm -f "$BACKUP_FILE"
+
+echo "Backup subido a S3"</code></pre>
+            </div>
+        </section>
+
+        <section id="exercise">
+            <h2>🎯 Ejercicio Práctico</h2>
+            <div class="success-box">
+                <h3>Crea un script de mantenimiento completo:</h3>
+                <pre><code>#!/bin/bash
+# maintenance.sh
+
+set -e
+
+echo "=== Iniciando Mantenimiento ==="
+
+# 1. Actualizar paquetes
+echo "Actualizando paquetes..."
+sudo dnf update -y
+
+# 2. Limpiar caché
+echo "Limpiando caché..."
+sudo dnf clean all
+
+# 3. Verificar espacio en disco
+echo "Verificando espacio..."
+df -h
+
+# 4. Backup de configs
+echo "Haciendo backup..."
+tar -czf /backup/etc_$(date +%Y%m%d).tar.gz /etc/nginx /etc/httpd
+
+# 5. Reiniciar servicios si es necesario
+echo "Verificando servicios..."
+systemctl restart nginx
+
+echo "=== Mantenimiento Completado ==="</code></pre>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>💪 Automatiza todo en Amazon Linux</p>
+    </footer>
+</body>
+</html>

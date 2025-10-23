@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Terminal - Amazon Linux CLI</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .terminal-container {
+            position: relative;
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 20px 0;
+        }
+        .terminal-header {
+            background: #2d2d2d;
+            padding: 10px;
+            border-radius: 5px 5px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .terminal-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .btn-close { background: #ff5f56; }
+        .btn-minimize { background: #ffbd2e; }
+        .btn-maximize { background: #27c93f; }
+        .terminal-title {
+            color: #999;
+            font-size: 0.9rem;
+        }
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .command-chip {
+            background: #f0f0f0;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        .command-chip:hover {
+            background: #FFE6CC;
+            border-color: #FF9900;
+            transform: translateY(-2px);
+        }
+        .help-section {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>💻 Simulador Interactivo de Terminal</h1>
+        <p class="subtitle">Practica comandos de Amazon Linux en un entorno seguro</p>
+        <nav class="main-nav">
+            <a href="../index.html">🏠 Inicio</a>
+            <a href="filesystem.html">📁 Archivos</a>
+            <a href="packages.html">📦 Paquetes</a>
+            <a href="processes.html">⚙️ Procesos</a>
+            <a href="exercises.html">🎯 Ejercicios</a>
+            <a href="simulator.html">💻 Simulador</a>
+        </nav>
+    </header>
+    <main>
+        <section id="intro">
+            <h2>Terminal Simulada de Amazon Linux 2023</h2>
+            <p>Practica más de 50 comandos de Linux en este simulador interactivo. Escribe comandos como lo harías en una terminal real.</p>
+            <div class="help-section">
+                <strong>💡 Atajos del Teclado:</strong><br>
+                • <kbd>Tab</kbd> - Autocompletado (próximamente)<br>
+                • <kbd>↑</kbd> / <kbd>↓</kbd> - Navegar historial de comandos<br>
+                • <kbd>Ctrl+C</kbd> - Cancelar comando actual<br>
+                • <kbd>Ctrl+L</kbd> - Limpiar pantalla<br>
+                • Escribe <code>help</code> para ver todos los comandos disponibles
+            </div>
+        </section>
+
+        <section id="terminal-section">
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <div class="terminal-buttons">
+                        <div class="terminal-button btn-close"></div>
+                        <div class="terminal-button btn-minimize"></div>
+                        <div class="terminal-button btn-maximize"></div>
+                    </div>
+                    <div class="terminal-title">ec2-user@ip-172-31-0-1: ~</div>
+                    <div style="width: 60px;"></div>
+                </div>
+                <div class="terminal" id="terminal">
+                    <div class="output" style="color: #00ff00;">Amazon Linux 2023 Simulator</div>
+                    <div class="output" style="color: #00ff00;">Escribe 'help' para ver comandos disponibles</div>
+                    <div class="output">&nbsp;</div>
+                    <div class="output">[ec2-user@ip-172-31-0-1 ~]$ <span id="input-line"></span><span class="cursor">_</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="quick-commands">
+            <h2>⚡ Comandos Rápidos</h2>
+            <p>Haz clic en cualquier comando para ejecutarlo:</p>
+            <div class="commands-grid">
+                <div class="command-chip" onclick="executeQuickCommand('pwd')">📍 pwd</div>
+                <div class="command-chip" onclick="executeQuickCommand('ls -la')">📋 ls -la</div>
+                <div class="command-chip" onclick="executeQuickCommand('whoami')">👤 whoami</div>
+                <div class="command-chip" onclick="executeQuickCommand('date')">📅 date</div>
+                <div class="command-chip" onclick="executeQuickCommand('uptime')">⏱️ uptime</div>
+                <div class="command-chip" onclick="executeQuickCommand('free -h')">💾 free -h</div>
+                <div class="command-chip" onclick="executeQuickCommand('df -h')">💿 df -h</div>
+                <div class="command-chip" onclick="executeQuickCommand('ps aux')">⚙️ ps aux</div>
+                <div class="command-chip" onclick="executeQuickCommand('ip addr')">🌐 ip addr</div>
+                <div class="command-chip" onclick="executeQuickCommand('systemctl status nginx')">🔧 status nginx</div>
+                <div class="command-chip" onclick="executeQuickCommand('cat /etc/os-release')">📄 os-release</div>
+                <div class="command-chip" onclick="executeQuickCommand('help')">❓ help</div>
+            </div>
+        </section>
+
+        <section id="available-commands">
+            <h2>📚 Comandos Disponibles en el Simulador</h2>
+            <div class="category-grid">
+                <div class="category-card">
+                    <h3>Sistema de Archivos</h3>
+                    <p><code>pwd, ls, cd, mkdir, touch, rm, cp, mv, cat, find, tree, file, du, df</code></p>
+                </div>
+                <div class="category-card">
+                    <h3>Sistema y Procesos</h3>
+                    <p><code>ps, top, kill, whoami, hostname, uptime, free, date, uname, w, who</code></p>
+                </div>
+                <div class="category-card">
+                    <h3>Red</h3>
+                    <p><code>ip, ping, curl, wget, ss, netstat, ifconfig</code></p>
+                </div>
+                <div class="category-card">
+                    <h3>Gestión de Paquetes</h3>
+                    <p><code>dnf list, dnf search, rpm -qa, yum info</code></p>
+                </div>
+                <div class="category-card">
+                    <h3>Servicios</h3>
+                    <p><code>systemctl status, systemctl list-units</code></p>
+                </div>
+                <div class="category-card">
+                    <h3>Utilidades</h3>
+                    <p><code>echo, clear, history, help, man, grep, head, tail</code></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="tips">
+            <h2>💡 Consejos de Uso</h2>
+            <div class="info-box">
+                <ul>
+                    <li>Este simulador replica el comportamiento básico de una terminal Amazon Linux</li>
+                    <li>Los comandos destructivos (rm, kill) están deshabilitados para seguridad</li>
+                    <li>Los datos mostrados son simulados y no afectan ningún sistema real</li>
+                    <li>Ideal para practicar sintaxis antes de usar comandos en una instancia EC2 real</li>
+                    <li>Experimenta libremente - ¡no puedes romper nada!</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>💪 Practica sin miedo en el simulador - es el mejor lugar para aprender</p>
+    </footer>
+    
+    <script src="../simulator.js"></script>
+</body>
+</html>

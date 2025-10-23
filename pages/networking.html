@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comandos de Red - Amazon Linux CLI</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>🌐 Comandos de Red y Conectividad</h1>
+        <p class="subtitle">Domina networking en Amazon Linux para AWS</p>
+        <nav class="main-nav">
+            <a href="../index.html">🏠 Inicio</a>
+            <a href="filesystem.html">📁 Archivos</a>
+            <a href="packages.html">📦 Paquetes</a>
+            <a href="networking.html">🌐 Redes</a>
+            <a href="security.html">🔒 Seguridad</a>
+            <a href="simulator.html">💻 Simulador</a>
+        </nav>
+    </header>
+    <main>
+        <section id="intro">
+            <h2>Comandos de Red en Amazon Linux</h2>
+            <p>Amazon Linux incluye herramientas modernas de red basadas en <strong>iproute2</strong>. Los comandos legacy (ifconfig, route, netstat) aún funcionan pero se recomienda usar los equivalentes modernos (ip, ss).</p>
+        </section>
+
+        <section id="ip-command">
+            <h2>Comando IP (Moderno)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>ip addr</code></td>
+                        <td>Muestra direcciones IP</td>
+                        <td><code>ip addr</code><br><code>ip addr show eth0</code><br><code>ip -4 addr</code> (solo IPv4)<br><code>ip -br addr</code> (breve)</td>
+                    </tr>
+                    <tr>
+                        <td><code>ip link</code></td>
+                        <td>Gestiona interfaces de red</td>
+                        <td><code>ip link</code><br><code>sudo ip link set eth0 up</code><br><code>sudo ip link set eth0 down</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>ip route</code></td>
+                        <td>Muestra/modifica tabla de rutas</td>
+                        <td><code>ip route</code><br><code>ip route show</code><br><code>sudo ip route add 10.0.0.0/24 via 192.168.1.1</code><br><code>sudo ip route del 10.0.0.0/24</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>ip neigh</code></td>
+                        <td>Muestra tabla ARP/vecinos</td>
+                        <td><code>ip neigh</code><br><code>ip neigh show</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="connectivity">
+            <h2>Pruebas de Conectividad</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                        <th>Uso en AWS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>ping</code></td>
+                        <td>Prueba conectividad ICMP</td>
+                        <td><code>ping google.com</code><br><code>ping -c 4 8.8.8.8</code> (4 paquetes)<br><code>ping -i 2 host</code> (intervalo 2s)</td>
+                        <td>Verificar conectividad entre instancias EC2</td>
+                    </tr>
+                    <tr>
+                        <td><code>ping6</code></td>
+                        <td>Ping para IPv6</td>
+                        <td><code>ping6 ipv6.google.com</code></td>
+                        <td>Probar IPv6 en VPC</td>
+                    </tr>
+                    <tr>
+                        <td><code>traceroute</code></td>
+                        <td>Rastrea ruta de paquetes</td>
+                        <td><code>traceroute google.com</code><br><code>traceroute -n 8.8.8.8</code> (sin DNS)</td>
+                        <td>Diagnosticar problemas de enrutamiento</td>
+                    </tr>
+                    <tr>
+                        <td><code>mtr</code></td>
+                        <td>Combinación de ping + traceroute</td>
+                        <td><code>mtr google.com</code><br><code>mtr -r -c 100 host</code> (reporte)</td>
+                        <td>Análisis continuo de red</td>
+                    </tr>
+                    <tr>
+                        <td><code>telnet</code></td>
+                        <td>Prueba conexión a puerto</td>
+                        <td><code>telnet example.com 80</code><br><code>telnet 192.168.1.1 22</code></td>
+                        <td>Verificar si puerto está abierto</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="ss-netstat">
+            <h2>Conexiones y Puertos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>ss</code></td>
+                        <td>Muestra sockets (moderno)</td>
+                        <td><code>ss -tuln</code> (TCP/UDP listening)<br><code>ss -tulpn</code> (con PIDs)<br><code>ss -s</code> (estadísticas)<br><code>ss -t state established</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>netstat</code></td>
+                        <td>Estadísticas de red (legacy)</td>
+                        <td><code>netstat -tuln</code><br><code>netstat -anp</code> (todos con PIDs)<br><code>netstat -i</code> (interfaces)</td>
+                    </tr>
+                    <tr>
+                        <td><code>lsof -i</code></td>
+                        <td>Lista archivos/puertos abiertos</td>
+                        <td><code>sudo lsof -i</code><br><code>sudo lsof -i :80</code> (puerto 80)<br><code>sudo lsof -i TCP</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>nc (netcat)</code></td>
+                        <td>Herramienta de red versátil</td>
+                        <td><code>nc -zv host 80</code> (probar puerto)<br><code>nc -l 8080</code> (escuchar)<br><code>nc host 80</code> (conectar)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="info-box">
+                <strong>💡 Opciones ss/netstat:</strong><br>
+                -t (TCP), -u (UDP), -l (listening), -n (numérico), -p (PIDs), -a (all)
+            </div>
+        </section>
+
+        <section id="dns">
+            <h2>DNS y Resolución de Nombres</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>nslookup</code></td>
+                        <td>Consulta DNS interactiva</td>
+                        <td><code>nslookup google.com</code><br><code>nslookup google.com 8.8.8.8</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>dig</code></td>
+                        <td>Herramienta DNS avanzada</td>
+                        <td><code>dig google.com</code><br><code>dig @8.8.8.8 example.com</code><br><code>dig +short google.com</code><br><code>dig -x 8.8.8.8</code> (reverse)</td>
+                    </tr>
+                    <tr>
+                        <td><code>host</code></td>
+                        <td>Consulta DNS simple</td>
+                        <td><code>host google.com</code><br><code>host -a google.com</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>whois</code></td>
+                        <td>Info de dominio/IP</td>
+                        <td><code>whois example.com</code><br><code>whois 8.8.8.8</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="download">
+            <h2>Descarga y Transferencia</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>curl</code></td>
+                        <td>Transfiere datos con URLs</td>
+                        <td><code>curl https://example.com</code><br><code>curl -O url</code> (guardar)<br><code>curl -I url</code> (headers)<br><code>curl -X POST -d "data" url</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>wget</code></td>
+                        <td>Descarga archivos</td>
+                        <td><code>wget url</code><br><code>wget -O file url</code><br><code>wget -c url</code> (continuar)<br><code>wget -r url</code> (recursivo)</td>
+                    </tr>
+                    <tr>
+                        <td><code>scp</code></td>
+                        <td>Copia segura entre hosts</td>
+                        <td><code>scp file user@host:/path</code><br><code>scp -r dir user@host:/path</code><br><code>scp user@host:/file .</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>rsync</code></td>
+                        <td>Sincronización eficiente</td>
+                        <td><code>rsync -av src/ dest/</code><br><code>rsync -avz user@host:/src/ /dest</code><br><code>rsync --delete src/ dest/</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>sftp</code></td>
+                        <td>FTP seguro interactivo</td>
+                        <td><code>sftp user@host</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="network-config">
+            <h2>Configuración de Red</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando/Archivo</th>
+                        <th>Descripción</th>
+                        <th>Ubicación/Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>nmcli</code></td>
+                        <td>NetworkManager CLI</td>
+                        <td><code>nmcli device status</code><br><code>nmcli connection show</code><br><code>nmcli con up eth0</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>hostname</code></td>
+                        <td>Muestra/establece hostname</td>
+                        <td><code>hostname</code><br><code>sudo hostnamectl set-hostname name</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>/etc/hosts</code></td>
+                        <td>Mapeo estático de hosts</td>
+                        <td><code>sudo vi /etc/hosts</code><br>127.0.0.1 localhost</td>
+                    </tr>
+                    <tr>
+                        <td><code>/etc/resolv.conf</code></td>
+                        <td>Configuración DNS</td>
+                        <td>nameserver 8.8.8.8</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="bandwidth">
+            <h2>Monitoreo de Ancho de Banda</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Instalación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>iftop</code></td>
+                        <td>Monitor de tráfico por conexión</td>
+                        <td><code>sudo dnf install iftop -y</code><br><code>sudo iftop -i eth0</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>nethogs</code></td>
+                        <td>Tráfico por proceso</td>
+                        <td><code>sudo dnf install nethogs -y</code><br><code>sudo nethogs</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>vnstat</code></td>
+                        <td>Estadísticas de tráfico</td>
+                        <td><code>sudo dnf install vnstat -y</code><br><code>vnstat -i eth0</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>iperf3</code></td>
+                        <td>Medir rendimiento de red</td>
+                        <td><code>sudo dnf install iperf3 -y</code><br><code>iperf3 -s</code> (servidor)<br><code>iperf3 -c host</code> (cliente)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="tcpdump">
+            <h2>Captura de Paquetes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>tcpdump</code></td>
+                        <td>Captura y analiza paquetes</td>
+                        <td><code>sudo tcpdump -i eth0</code><br><code>sudo tcpdump port 80</code><br><code>sudo tcpdump -w file.pcap</code><br><code>sudo tcpdump -r file.pcap</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>tshark</code></td>
+                        <td>Wireshark CLI</td>
+                        <td><code>sudo tshark -i eth0</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="exercise">
+            <h2>🎯 Ejercicio Práctico AWS</h2>
+            <div class="success-box">
+                <h3>Diagnóstico de Red en EC2</h3>
+                <pre><code># 1. Ver configuración de red
+ip addr show
+ip route show
+
+# 2. Verificar conectividad
+ping -c 4 8.8.8.8
+curl -I https://aws.amazon.com
+
+# 3. Ver puertos abiertos
+sudo ss -tulpn | grep LISTEN
+
+# 4. Probar DNS
+dig amazon.com
+nslookup ec2.amazonaws.com
+
+# 5. Ver conexiones activas
+sudo ss -tunap | grep ESTAB
+
+# 6. Monitorear tráfico
+sudo tcpdump -i eth0 -c 10</code></pre>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>💪 Domina networking en Amazon Linux</p>
+    </footer>
+</body>
+</html>

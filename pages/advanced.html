@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comandos Avanzado - Maestro Amazon Linux</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>Comandos Avanzado</h1>
+        <nav>
+            <a href="../index.html">Inicio</a>
+            <a href="beginner.html">Principiante</a>
+            <a href="intermediate.html">Intermedio</a>
+            <a href="advanced.html">Avanzado</a>
+            <a href="simulator.html">Simulador</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Comandos Avanzados</h2>
+        <p>Dominemos redes, seguridad, servicios y automatización en Amazon Linux.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Comando</th>
+                    <th>Descripción</th>
+                    <th>Ejemplo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>systemctl</td>
+                    <td>Gestiona servicios systemd</td>
+                    <td><code>systemctl start httpd</code></td>
+                </tr>
+                <tr>
+                    <td>yum</td>
+                    <td>Gestor de paquetes</td>
+                    <td><code>yum install paquete</code></td>
+                </tr>
+                <tr>
+                    <td>firewall-cmd</td>
+                    <td>Configura firewall</td>
+                    <td><code>firewall-cmd --add-port=80/tcp</code></td>
+                </tr>
+                <tr>
+                    <td>ss</td>
+                    <td>Muestra conexiones de red</td>
+                    <td><code>ss -tuln</code></td>
+                </tr>
+                <tr>
+                    <td>curl</td>
+                    <td>Transfiere datos desde/hacia servidor</td>
+                    <td><code>curl http://example.com</code></td>
+                </tr>
+                <tr>
+                    <td>wget</td>
+                    <td>Descarga archivos</td>
+                    <td><code>wget url</code></td>
+                </tr>
+                <tr>
+                    <td>crontab</td>
+                    <td>Programa tareas</td>
+                    <td><code>crontab -e</code></td>
+                </tr>
+                <tr>
+                    <td>journalctl</td>
+                    <td>Ve logs del sistema</td>
+                    <td><code>journalctl -u servicio</code></td>
+                </tr>
+                <tr>
+                    <td>iptables</td>
+                    <td>Configura reglas de firewall</td>
+                    <td><code>iptables -A INPUT -p tcp --dport 22 -j ACCEPT</code></td>
+                </tr>
+                <tr>
+                    <td>rsync</td>
+                    <td>Sincroniza archivos eficientemente</td>
+                    <td><code>rsync -av origen destino</code></td>
+                </tr>
+            </tbody>
+        </table>
+        <section id="tips">
+            <h3>Consejos Expertos</h3>
+            <ul>
+                <li>Usa <code>systemctl enable</code> para iniciar servicios al boot.</li>
+                <li>Yum: <code>yum update</code> mantiene el sistema seguro.</li>
+                <li>Automatiza con cron: <code>0 2 * * * backup.sh</code> ejecuta backup diario a las 2 AM.</li>
+                <li>Monitorea logs: <code>journalctl --since today</code></li>
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>¡Eres un maestro!</p>
+    </footer>
+</body>
+</html>

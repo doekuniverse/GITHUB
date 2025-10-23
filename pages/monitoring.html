@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoreo y Logs - Amazon Linux CLI</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>📊 Monitoreo, Logs y Rendimiento</h1>
+        <p class="subtitle">Observabilidad completa en Amazon Linux</p>
+        <nav class="main-nav">
+            <a href="../index.html">🏠 Inicio</a>
+            <a href="monitoring.html">📊 Monitoreo</a>
+            <a href="processes.html">⚙️ Procesos</a>
+            <a href="networking.html">🌐 Redes</a>
+            <a href="simulator.html">💻 Simulador</a>
+        </nav>
+    </header>
+    <main>
+        <section id="logs">
+            <h2>Sistema de Logs (journald/rsyslog)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>journalctl</code></td>
+                        <td>Ver logs de systemd</td>
+                        <td><code>journalctl</code><br><code>journalctl -u nginx</code> (servicio)<br><code>journalctl -f</code> (follow)<br><code>journalctl --since "2 hours ago"</code><br><code>journalctl -p err</code> (solo errores)<br><code>journalctl -k</code> (kernel)</td>
+                    </tr>
+                    <tr>
+                        <td><code>dmesg</code></td>
+                        <td>Mensajes del kernel</td>
+                        <td><code>dmesg</code><br><code>dmesg -T</code> (timestamps legibles)<br><code>dmesg | grep -i error</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>logger</code></td>
+                        <td>Escribe en syslog</td>
+                        <td><code>logger "Mensaje de prueba"</code><br><code>logger -p local0.info "Test"</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>tail -f</code></td>
+                        <td>Sigue logs en tiempo real</td>
+                        <td><code>tail -f /var/log/messages</code><br><code>tail -f /var/log/nginx/access.log</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="info-box">
+                <strong>📁 Ubicaciones de logs importantes:</strong><br>
+                • /var/log/messages - Logs del sistema<br>
+                • /var/log/secure - Autenticación SSH<br>
+                • /var/log/dnf.log - Actualizaciones de paquetes<br>
+                • /var/log/audit/audit.log - Auditoría SELinux
+            </div>
+        </section>
+
+        <section id="performance">
+            <h2>Rendimiento del Sistema</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>uptime</code></td>
+                        <td>Tiempo encendido y load average</td>
+                        <td><code>uptime</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>vmstat</code></td>
+                        <td>Estadísticas de memoria virtual</td>
+                        <td><code>vmstat</code><br><code>vmstat 1 10</code> (cada 1s, 10 veces)</td>
+                    </tr>
+                    <tr>
+                        <td><code>iostat</code></td>
+                        <td>Estadísticas de I/O</td>
+                        <td><code>iostat</code><br><code>iostat -x 1</code> (extendido, cada 1s)</td>
+                    </tr>
+                    <tr>
+                        <td><code>sar</code></td>
+                        <td>Recolector de actividad del sistema</td>
+                        <td><code>sar -u</code> (CPU)<br><code>sar -r</code> (memoria)<br><code>sar -n DEV</code> (red)</td>
+                    </tr>
+                    <tr>
+                        <td><code>mpstat</code></td>
+                        <td>Estadísticas por CPU</td>
+                        <td><code>mpstat -P ALL</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>pidstat</code></td>
+                        <td>Estadísticas por proceso</td>
+                        <td><code>pidstat 1</code><br><code>pidstat -d</code> (I/O)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="success-box">
+                <strong>Instalar sysstat:</strong> <code>sudo dnf install sysstat -y</code><br>
+                Habilitar: <code>sudo systemctl enable sysstat</code>
+            </div>
+        </section>
+
+        <section id="memory">
+            <h2>Memoria y CPU</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>free</code></td>
+                        <td>Uso de memoria</td>
+                        <td><code>free -h</code><br><code>free -m</code> (MB)</td>
+                    </tr>
+                    <tr>
+                        <td><code>lscpu</code></td>
+                        <td>Info de CPU</td>
+                        <td><code>lscpu</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>nproc</code></td>
+                        <td>Número de CPUs</td>
+                        <td><code>nproc</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>smem</code></td>
+                        <td>Uso de memoria por proceso</td>
+                        <td><code>smem -r</code> (ordenado)<br><code>smem -u</code> (por usuario)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="disk-io">
+            <h2>Monitoreo de Disco I/O</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>iotop</code></td>
+                        <td>I/O por proceso (como top)</td>
+                        <td><code>sudo iotop</code><br><code>sudo iotop -o</code> (solo activos)</td>
+                    </tr>
+                    <tr>
+                        <td><code>df</code></td>
+                        <td>Espacio en disco</td>
+                        <td><code>df -h</code><br><code>df -i</code> (inodes)</td>
+                    </tr>
+                    <tr>
+                        <td><code>du</code></td>
+                        <td>Uso por directorio</td>
+                        <td><code>du -sh /*</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="cloudwatch">
+            <h2>Integración con CloudWatch</h2>
+            <div class="info-box">
+                <strong>CloudWatch Agent en EC2:</strong>
+                <pre><code># Instalar agente
+sudo dnf install amazon-cloudwatch-agent -y
+
+# Configurar
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-config-wizard
+
+# Iniciar
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+  -a fetch-config \
+  -m ec2 \
+  -s \
+  -c file:/opt/aws/amazon-cloudwatch-agent/etc/config.json</code></pre>
+            </div>
+        </section>
+
+        <section id="exercise">
+            <h2>🎯 Ejercicio Práctico</h2>
+            <div class="success-box">
+                <pre><code># 1. Ver logs del sistema
+journalctl -xe
+journalctl -u sshd
+
+# 2. Monitorear rendimiento
+top
+vmstat 1 5
+iostat -x 1 5
+
+# 3. Analizar memoria
+free -h
+ps aux --sort=-%mem | head
+
+# 4. Ver uso de disco
+df -h
+du -sh /* | sort -rh</code></pre>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>💪 Monitorea tu sistema Amazon Linux como un pro</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Paquetes - Amazon Linux CLI</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>📦 Gestión de Paquetes DNF/YUM</h1>
+        <p class="subtitle">Domina el gestor de paquetes de Amazon Linux 2023</p>
+        <nav class="main-nav">
+            <a href="../index.html">🏠 Inicio</a>
+            <a href="filesystem.html">📁 Sistema de Archivos</a>
+            <a href="packages.html">📦 Paquetes</a>
+            <a href="users.html">👥 Usuarios</a>
+            <a href="processes.html">⚙️ Procesos</a>
+            <a href="networking.html">🌐 Redes</a>
+            <a href="simulator.html">💻 Simulador</a>
+        </nav>
+    </header>
+    <main>
+        <section id="intro">
+            <h2>DNF: El Gestor de Paquetes de Amazon Linux 2023</h2>
+            <p>Amazon Linux 2023 usa <strong>DNF (Dandified YUM)</strong> como gestor de paquetes predeterminado. DNF es el sucesor de YUM y ofrece mejor rendimiento, resolución de dependencias mejorada y menor uso de memoria.</p>
+            <div class="info-box">
+                <strong>💡 Importante:</strong> En AL2023, el comando <code>yum</code> sigue disponible como alias de <code>dnf</code>. Ambos funcionan de forma idéntica. Amazon Linux 2 (AL2) todavía usa YUM, pero AL2023 migró a DNF.
+            </div>
+            <div class="warning-box">
+                <strong>⚠️ Nota de Seguridad:</strong> Siempre mantén tu sistema actualizado con <code>sudo dnf update</code> para recibir parches de seguridad críticos de AWS.
+            </div>
+        </section>
+
+        <section id="basic-dnf">
+            <h2>Comandos DNF Básicos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                        <th>Notas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>dnf update</code></td>
+                        <td>Actualiza todos los paquetes del sistema</td>
+                        <td><code>sudo dnf update</code><br><code>sudo dnf update -y</code> (sin confirmación)</td>
+                        <td>Ejecutar regularmente para seguridad</td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf upgrade</code></td>
+                        <td>Similar a update, pero elimina paquetes obsoletos</td>
+                        <td><code>sudo dnf upgrade</code></td>
+                        <td>Más agresivo que update</td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf check-update</code></td>
+                        <td>Verifica actualizaciones sin instalar</td>
+                        <td><code>dnf check-update</code><br><code>dnf check-update nginx</code> (paquete específico)</td>
+                        <td>No requiere sudo para consultar</td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf install</code></td>
+                        <td>Instala paquetes</td>
+                        <td><code>sudo dnf install nginx</code><br><code>sudo dnf install httpd php mysql</code> (múltiples)<br><code>sudo dnf install -y git</code></td>
+                        <td>Resuelve dependencias automáticamente</td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf reinstall</code></td>
+                        <td>Reinstala un paquete</td>
+                        <td><code>sudo dnf reinstall nginx</code></td>
+                        <td>Útil para reparar archivos corruptos</td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf remove</code></td>
+                        <td>Elimina paquetes</td>
+                        <td><code>sudo dnf remove nginx</code><br><code>sudo dnf remove httpd --noautoremove</code></td>
+                        <td>También elimina dependencias no usadas</td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf autoremove</code></td>
+                        <td>Elimina paquetes huérfanos</td>
+                        <td><code>sudo dnf autoremove</code></td>
+                        <td>Libera espacio eliminando deps no usadas</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="search-info">
+            <h2>Búsqueda e Información de Paquetes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                        <th>Uso Común</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>dnf search</code></td>
+                        <td>Busca paquetes por nombre o descripción</td>
+                        <td><code>dnf search nginx</code><br><code>dnf search all python</code> (búsqueda completa)</td>
+                        <td>Encontrar paquetes disponibles</td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf info</code></td>
+                        <td>Muestra información detallada</td>
+                        <td><code>dnf info nginx</code><br><code>dnf info installed</code> (todos instalados)</td>
+                        <td>Ver versión, tamaño, descripción</td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf list</code></td>
+                        <td>Lista paquetes</td>
+                        <td><code>dnf list installed</code><br><code>dnf list available</code><br><code>dnf list updates</code><br><code>dnf list nginx*</code></td>
+                        <td>Ver qué está instalado o disponible</td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf provides</code></td>
+                        <td>Encuentra qué paquete proporciona un archivo</td>
+                        <td><code>dnf provides /usr/bin/python3</code><br><code>dnf provides */semanage</code></td>
+                        <td>Cuando falta un comando/archivo</td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf repoquery</code></td>
+                        <td>Consultas avanzadas de repositorios</td>
+                        <td><code>dnf repoquery --requires nginx</code><br><code>dnf repoquery --whatrequires python3</code><br><code>dnf repoquery -l nginx</code> (archivos)</td>
+                        <td>Análisis de dependencias</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="groups">
+            <h2>Grupos de Paquetes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>dnf group list</code></td>
+                        <td>Lista grupos de paquetes disponibles</td>
+                        <td><code>dnf group list</code><br><code>dnf group list hidden</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf group info</code></td>
+                        <td>Info sobre un grupo</td>
+                        <td><code>dnf group info "Development Tools"</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf group install</code></td>
+                        <td>Instala un grupo completo</td>
+                        <td><code>sudo dnf group install "Development Tools"</code><br><code>sudo dnf groupinstall "Web Server"</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf group remove</code></td>
+                        <td>Elimina un grupo</td>
+                        <td><code>sudo dnf group remove "Development Tools"</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="success-box">
+                <strong>💡 Grupos Útiles en AWS:</strong><br>
+                • "Development Tools" - gcc, make, etc.<br>
+                • "Web Server" - Apache y módulos<br>
+                • "System Tools" - herramientas de administración
+            </div>
+        </section>
+
+        <section id="repos">
+            <h2>Gestión de Repositorios</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                        <th>Archivos de Config</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>dnf repolist</code></td>
+                        <td>Lista repositorios habilitados</td>
+                        <td><code>dnf repolist</code><br><code>dnf repolist all</code> (incluye deshabilitados)<br><code>dnf repolist enabled</code></td>
+                        <td>/etc/yum.repos.d/</td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf config-manager</code></td>
+                        <td>Gestiona configuración de repos</td>
+                        <td><code>sudo dnf config-manager --add-repo URL</code><br><code>sudo dnf config-manager --enable repo-id</code><br><code>sudo dnf config-manager --disable repo-id</code></td>
+                        <td>Modifica archivos en /etc/yum.repos.d/</td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf check-release-update</code></td>
+                        <td>Verifica nuevas versiones de repositorio</td>
+                        <td><code>dnf check-release-update</code></td>
+                        <td>Específico de Amazon Linux 2023</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="info-box">
+                <strong>📁 Ubicaciones Importantes:</strong><br>
+                • Repos: <code>/etc/yum.repos.d/</code><br>
+                • Config DNF: <code>/etc/dnf/dnf.conf</code><br>
+                • Cache: <code>/var/cache/dnf/</code><br>
+                • Logs: <code>/var/log/dnf.log</code>
+            </div>
+        </section>
+
+        <section id="history">
+            <h2>Historial y Transacciones</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                        <th>Uso Avanzado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>dnf history</code></td>
+                        <td>Muestra historial de transacciones</td>
+                        <td><code>dnf history</code><br><code>dnf history list</code><br><code>dnf history list nginx</code></td>
+                        <td>Ver qué se instaló/actualizó/eliminó</td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf history info</code></td>
+                        <td>Detalles de una transacción</td>
+                        <td><code>dnf history info 5</code> (transacción #5)</td>
+                        <td>Ver exactamente qué cambió</td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf history undo</code></td>
+                        <td>Revierte una transacción</td>
+                        <td><code>sudo dnf history undo 5</code></td>
+                        <td>Deshacer instalaciones/actualizaciones</td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf history redo</code></td>
+                        <td>Repite una transacción</td>
+                        <td><code>sudo dnf history redo 5</code></td>
+                        <td>Rehacer cambios</td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf history rollback</code></td>
+                        <td>Retrocede a un punto específico</td>
+                        <td><code>sudo dnf history rollback 3</code></td>
+                        <td>Volver a un estado anterior</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="warning-box">
+                <strong>⚠️ Precaución:</strong> <code>dnf history undo/rollback</code> puede causar problemas si las dependencias han cambiado. Usa con cuidado en producción.
+            </div>
+        </section>
+
+        <section id="cache">
+            <h2>Gestión de Caché</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>dnf makecache</code></td>
+                        <td>Descarga metadatos de repositorios</td>
+                        <td><code>sudo dnf makecache</code><br><code>sudo dnf makecache --refresh</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf clean all</code></td>
+                        <td>Limpia toda la caché</td>
+                        <td><code>sudo dnf clean all</code><br><code>sudo dnf clean packages</code> (solo paquetes)<br><code>sudo dnf clean metadata</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="rpm">
+            <h2>Comandos RPM (Low-Level)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                        <th>Cuándo Usar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>rpm -qa</code></td>
+                        <td>Lista todos los paquetes instalados</td>
+                        <td><code>rpm -qa</code><br><code>rpm -qa | grep nginx</code><br><code>rpm -qa --last</code> (últimos instalados)</td>
+                        <td>Ver todo lo instalado</td>
+                    </tr>
+                    <tr>
+                        <td><code>rpm -qi</code></td>
+                        <td>Info de paquete instalado</td>
+                        <td><code>rpm -qi nginx</code></td>
+                        <td>Detalles de paquetes instalados</td>
+                    </tr>
+                    <tr>
+                        <td><code>rpm -ql</code></td>
+                        <td>Lista archivos de un paquete</td>
+                        <td><code>rpm -ql nginx</code></td>
+                        <td>Ver qué archivos instaló un paquete</td>
+                    </tr>
+                    <tr>
+                        <td><code>rpm -qf</code></td>
+                        <td>Encuentra a qué paquete pertenece un archivo</td>
+                        <td><code>rpm -qf /usr/bin/python3</code></td>
+                        <td>Determinar origen de archivos</td>
+                    </tr>
+                    <tr>
+                        <td><code>rpm -qc</code></td>
+                        <td>Lista archivos de configuración</td>
+                        <td><code>rpm -qc nginx</code></td>
+                        <td>Ver configs de un paquete</td>
+                    </tr>
+                    <tr>
+                        <td><code>rpm -V</code></td>
+                        <td>Verifica integridad de paquete</td>
+                        <td><code>rpm -V nginx</code><br><code>rpm -Va</code> (todos)</td>
+                        <td>Detectar archivos modificados</td>
+                    </tr>
+                    <tr>
+                        <td><code>rpm -ivh</code></td>
+                        <td>Instala paquete RPM local</td>
+                        <td><code>sudo rpm -ivh package.rpm</code></td>
+                        <td>Instalar .rpm descargados manualmente</td>
+                    </tr>
+                    <tr>
+                        <td><code>rpm -e</code></td>
+                        <td>Elimina paquete</td>
+                        <td><code>sudo rpm -e package</code></td>
+                        <td>Preferir dnf remove</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="info-box">
+                <strong>💡 DNF vs RPM:</strong><br>
+                • <strong>DNF</strong>: Gestiona dependencias automáticamente, usa repositorios<br>
+                • <strong>RPM</strong>: Operaciones low-level, no maneja dependencias, útil para consultas
+            </div>
+        </section>
+
+        <section id="security">
+            <h2>Actualizaciones de Seguridad</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>dnf updateinfo</code></td>
+                        <td>Muestra información de actualizaciones</td>
+                        <td><code>dnf updateinfo</code><br><code>dnf updateinfo list security</code><br><code>dnf updateinfo info</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf upgrade --security</code></td>
+                        <td>Instala solo parches de seguridad</td>
+                        <td><code>sudo dnf upgrade --security</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf upgrade-minimal</code></td>
+                        <td>Actualización mínima para resolver issues</td>
+                        <td><code>sudo dnf upgrade-minimal --security</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="danger-box">
+                <strong>🔒 Seguridad Crítica:</strong> En instancias EC2 de producción, configura actualizaciones automáticas de seguridad con <code>dnf-automatic</code>:
+                <pre><code>sudo dnf install dnf-automatic
+sudo systemctl enable --now dnf-automatic.timer</code></pre>
+            </div>
+        </section>
+
+        <section id="plugins">
+            <h2>Plugins y Módulos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando/Concepto</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>dnf module list</code></td>
+                        <td>Lista módulos disponibles</td>
+                        <td><code>dnf module list</code><br><code>dnf module list postgresql</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf module enable</code></td>
+                        <td>Habilita un stream de módulo</td>
+                        <td><code>sudo dnf module enable postgresql:13</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf module install</code></td>
+                        <td>Instala módulo y sus paquetes</td>
+                        <td><code>sudo dnf module install postgresql:13</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>dnf module reset</code></td>
+                        <td>Resetea estado de módulo</td>
+                        <td><code>sudo dnf module reset postgresql</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="troubleshooting">
+            <h2>Resolución de Problemas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Problema</th>
+                        <th>Solución</th>
+                        <th>Comando</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Metadatos corruptos</td>
+                        <td>Limpiar y regenerar caché</td>
+                        <td><code>sudo dnf clean all && sudo dnf makecache</code></td>
+                    </tr>
+                    <tr>
+                        <td>Lock de dnf activo</td>
+                        <td>Esperar o eliminar lock</td>
+                        <td><code>sudo rm -f /var/run/dnf.pid</code></td>
+                    </tr>
+                    <tr>
+                        <td>Conflicto de dependencias</td>
+                        <td>Ver detalles y resolver</td>
+                        <td><code>dnf repoquery --whatrequires package</code></td>
+                    </tr>
+                    <tr>
+                        <td>Repositorio no responde</td>
+                        <td>Deshabilitar temporalmente</td>
+                        <td><code>sudo dnf --disablerepo=problem-repo install package</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="best-practices">
+            <h2>🎯 Mejores Prácticas en AWS EC2</h2>
+            <div class="success-box">
+                <ol>
+                    <li><strong>Actualiza regularmente:</strong> <code>sudo dnf update -y</code> antes de instalar nuevos paquetes</li>
+                    <li><strong>Usa AMIs actualizadas:</strong> AWS publica nuevas AMIs con parches de seguridad</li>
+                    <li><strong>Snapshots antes de updates mayores:</strong> Crea snapshot EBS antes de <code>dnf upgrade</code></li>
+                    <li><strong>Automatiza updates de seguridad:</strong> Instala <code>dnf-automatic</code></li>
+                    <li><strong>Verifica espacio en disco:</strong> <code>df -h</code> antes de updates grandes</li>
+                    <li><strong>Revisa logs:</strong> <code>tail -f /var/log/dnf.log</code> para troubleshooting</li>
+                    <li><strong>Usa grupos para stacks:</strong> Instala "Web Server" en lugar de paquetes individuales</li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="common-packages">
+            <h2>📚 Paquetes Comunes en AWS</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Categoría</th>
+                        <th>Paquetes</th>
+                        <th>Comando de Instalación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Desarrollo</td>
+                        <td>gcc, make, git, python3-pip</td>
+                        <td><code>sudo dnf install gcc make git python3-pip -y</code></td>
+                    </tr>
+                    <tr>
+                        <td>Web Server</td>
+                        <td>nginx, httpd (Apache)</td>
+                        <td><code>sudo dnf install nginx -y</code></td>
+                    </tr>
+                    <tr>
+                        <td>Database</td>
+                        <td>mariadb-server, postgresql-server</td>
+                        <td><code>sudo dnf install mariadb-server -y</code></td>
+                    </tr>
+                    <tr>
+                        <td>Monitoreo</td>
+                        <td>htop, iotop, sysstat</td>
+                        <td><code>sudo dnf install htop iotop sysstat -y</code></td>
+                    </tr>
+                    <tr>
+                        <td>Seguridad</td>
+                        <td>fail2ban, aide, rkhunter</td>
+                        <td><code>sudo dnf install fail2ban -y</code></td>
+                    </tr>
+                    <tr>
+                        <td>Redes</td>
+                        <td>bind-utils, traceroute, nmap</td>
+                        <td><code>sudo dnf install bind-utils traceroute -y</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="exercise">
+            <h2>🎯 Ejercicio Práctico</h2>
+            <div class="success-box">
+                <h3>Desafío: Configura un Stack LAMP</h3>
+                <pre><code># 1. Actualiza el sistema
+sudo dnf update -y
+
+# 2. Instala Apache, PHP y MariaDB
+sudo dnf install httpd php php-mysqlnd mariadb-server -y
+
+# 3. Verifica qué se instaló
+rpm -qa | grep -E 'httpd|php|mariadb'
+
+# 4. Inicia servicios
+sudo systemctl start httpd mariadb
+sudo systemctl enable httpd mariadb
+
+# 5. Verifica historial
+dnf history list | head -5</code></pre>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>💪 Domina la gestión de paquetes en Amazon Linux</p>
+    </footer>
+</body>
+</html>

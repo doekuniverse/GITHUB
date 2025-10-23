@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios y Permisos - Amazon Linux CLI</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>👥 Gestión de Usuarios, Grupos y Permisos</h1>
+        <p class="subtitle">Control de acceso completo en Amazon Linux</p>
+        <nav class="main-nav">
+            <a href="../index.html">🏠 Inicio</a>
+            <a href="users.html">👥 Usuarios</a>
+            <a href="processes.html">⚙️ Procesos</a>
+            <a href="security.html">🔒 Seguridad</a>
+            <a href="simulator.html">💻 Simulador</a>
+        </nav>
+    </header>
+    <main>
+        <section id="users-mgmt">
+            <h2>Gestión de Usuarios</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>useradd</code></td>
+                        <td>Crea usuario</td>
+                        <td><code>sudo useradd juan</code><br><code>sudo useradd -m -s /bin/bash maria</code><br><code>sudo useradd -G developers pedro</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>usermod</code></td>
+                        <td>Modifica usuario</td>
+                        <td><code>sudo usermod -aG sudo juan</code><br><code>sudo usermod -s /bin/zsh maria</code><br><code>sudo usermod -L juan</code> (bloquear)</td>
+                    </tr>
+                    <tr>
+                        <td><code>userdel</code></td>
+                        <td>Elimina usuario</td>
+                        <td><code>sudo userdel juan</code><br><code>sudo userdel -r maria</code> (con home)</td>
+                    </tr>
+                    <tr>
+                        <td><code>passwd</code></td>
+                        <td>Cambia contraseña</td>
+                        <td><code>passwd</code> (propia)<br><code>sudo passwd juan</code><br><code>sudo passwd -l user</code> (lock)<br><code>sudo passwd -u user</code> (unlock)</td>
+                    </tr>
+                    <tr>
+                        <td><code>id</code></td>
+                        <td>Muestra info de usuario</td>
+                        <td><code>id</code><br><code>id juan</code><br><code>id -u</code> (UID)<br><code>id -gn</code> (grupo)</td>
+                    </tr>
+                    <tr>
+                        <td><code>who</code></td>
+                        <td>Usuarios logueados</td>
+                        <td><code>who</code><br><code>who -a</code> (todo)<br><code>whoami</code> (usuario actual)</td>
+                    </tr>
+                    <tr>
+                        <td><code>w</code></td>
+                        <td>Quién está logueado y qué hacen</td>
+                        <td><code>w</code><br><code>w juan</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>last</code></td>
+                        <td>Historial de logins</td>
+                        <td><code>last</code><br><code>last juan</code><br><code>last -10</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="groups">
+            <h2>Gestión de Grupos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>groupadd</code></td>
+                        <td>Crea grupo</td>
+                        <td><code>sudo groupadd developers</code><br><code>sudo groupadd -g 1500 team</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>groupmod</code></td>
+                        <td>Modifica grupo</td>
+                        <td><code>sudo groupmod -n newname oldname</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>groupdel</code></td>
+                        <td>Elimina grupo</td>
+                        <td><code>sudo groupdel developers</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>groups</code></td>
+                        <td>Muestra grupos de usuario</td>
+                        <td><code>groups</code><br><code>groups juan</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>gpasswd</code></td>
+                        <td>Administra grupos</td>
+                        <td><code>sudo gpasswd -a juan developers</code> (añadir)<br><code>sudo gpasswd -d juan devs</code> (remover)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="sudo">
+            <h2>Sudo y Privilegios</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>sudo</code></td>
+                        <td>Ejecuta como superusuario</td>
+                        <td><code>sudo comando</code><br><code>sudo -u juan comando</code> (como juan)<br><code>sudo -i</code> (shell root)</td>
+                    </tr>
+                    <tr>
+                        <td><code>visudo</code></td>
+                        <td>Edita /etc/sudoers</td>
+                        <td><code>sudo visudo</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>su</code></td>
+                        <td>Cambia de usuario</td>
+                        <td><code>su - juan</code><br><code>su -</code> (root)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="info-box">
+                <strong>📁 Archivos Importantes:</strong><br>
+                • /etc/passwd - Info de usuarios<br>
+                • /etc/shadow - Contraseñas hasheadas<br>
+                • /etc/group - Info de grupos<br>
+                • /etc/sudoers - Config de sudo
+            </div>
+        </section>
+
+        <section id="acl">
+            <h2>ACLs (Access Control Lists)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>getfacl</code></td>
+                        <td>Ver ACLs de archivo</td>
+                        <td><code>getfacl archivo</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>setfacl</code></td>
+                        <td>Establece ACLs</td>
+                        <td><code>setfacl -m u:juan:rw archivo</code><br><code>setfacl -x u:juan archivo</code> (remove)<br><code>setfacl -b archivo</code> (remove all)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="exercise">
+            <h2>🎯 Ejercicio Práctico</h2>
+            <div class="success-box">
+                <pre><code># 1. Crear usuario desarrollador
+sudo useradd -m -s /bin/bash developer
+sudo passwd developer
+
+# 2. Crear grupo y añadir usuario
+sudo groupadd webdev
+sudo usermod -aG webdev developer
+
+# 3. Dar permisos sudo
+sudo usermod -aG wheel developer
+
+# 4. Verificar
+id developer
+groups developer</code></pre>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>💪 Domina gestión de usuarios en Amazon Linux</p>
+    </footer>
+</body>
+</html>

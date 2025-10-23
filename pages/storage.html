@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Almacenamiento - Amazon Linux CLI</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>💾 Gestión de Almacenamiento y Discos</h1>
+        <p class="subtitle">Particiones, LVM, montaje y volúmenes EBS</p>
+        <nav class="main-nav">
+            <a href="../index.html">🏠 Inicio</a>
+            <a href="storage.html">💾 Almacenamiento</a>
+            <a href="filesystem.html">📁 Archivos</a>
+            <a href="monitoring.html">📊 Monitoreo</a>
+            <a href="simulator.html">💻 Simulador</a>
+        </nav>
+    </header>
+    <main>
+        <section id="disk-info">
+            <h2>Información de Discos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>lsblk</code></td>
+                        <td>Lista dispositivos de bloque</td>
+                        <td><code>lsblk</code><br><code>lsblk -f</code> (con filesystems)</td>
+                    </tr>
+                    <tr>
+                        <td><code>fdisk -l</code></td>
+                        <td>Lista particiones</td>
+                        <td><code>sudo fdisk -l</code><br><code>sudo fdisk -l /dev/xvda</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>blkid</code></td>
+                        <td>UUID y tipo de filesystem</td>
+                        <td><code>sudo blkid</code><br><code>sudo blkid /dev/xvda1</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>df</code></td>
+                        <td>Espacio en filesystems</td>
+                        <td><code>df -h</code><br><code>df -i</code> (inodes)</td>
+                    </tr>
+                    <tr>
+                        <td><code>du</code></td>
+                        <td>Uso de disco por directorio</td>
+                        <td><code>du -sh /*</code><br><code>du -h --max-depth=1</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="partitions">
+            <h2>Particionado</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Uso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>fdisk</code></td>
+                        <td>Editor de particiones (MBR)</td>
+                        <td><code>sudo fdisk /dev/xvdf</code><br>n (nueva), d (delete), w (write), q (quit)</td>
+                    </tr>
+                    <tr>
+                        <td><code>gdisk</code></td>
+                        <td>Editor GPT</td>
+                        <td><code>sudo gdisk /dev/xvdf</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>parted</code></td>
+                        <td>Particionado avanzado</td>
+                        <td><code>sudo parted /dev/xvdf</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="filesystems">
+            <h2>Sistemas de Archivos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>mkfs</code></td>
+                        <td>Crea filesystem</td>
+                        <td><code>sudo mkfs.ext4 /dev/xvdf1</code><br><code>sudo mkfs.xfs /dev/xvdf1</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>mount</code></td>
+                        <td>Monta filesystem</td>
+                        <td><code>sudo mount /dev/xvdf1 /mnt</code><br><code>sudo mount -o ro /dev/xvdf1 /mnt</code> (read-only)</td>
+                    </tr>
+                    <tr>
+                        <td><code>umount</code></td>
+                        <td>Desmonta filesystem</td>
+                        <td><code>sudo umount /mnt</code><br><code>sudo umount -l /mnt</code> (lazy)</td>
+                    </tr>
+                    <tr>
+                        <td><code>e2label</code></td>
+                        <td>Etiqueta ext2/3/4</td>
+                        <td><code>sudo e2label /dev/xvdf1 data</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>tune2fs</code></td>
+                        <td>Ajusta parámetros ext</td>
+                        <td><code>sudo tune2fs -l /dev/xvdf1</code> (info)<br><code>sudo tune2fs -m 1 /dev/xvdf1</code> (reserved blocks)</td>
+                    </tr>
+                    <tr>
+                        <td><code>fsck</code></td>
+                        <td>Verifica y repara filesystem</td>
+                        <td><code>sudo fsck /dev/xvdf1</code><br><code>sudo fsck -y /dev/xvdf1</code> (auto-yes)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="danger-box">
+                <strong>⚠️ PELIGRO:</strong> No ejecutes fsck en filesystems montados. Siempre desmonta primero.
+            </div>
+        </section>
+
+        <section id="lvm">
+            <h2>LVM (Logical Volume Manager)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>pvcreate</code></td>
+                        <td>Crea Physical Volume</td>
+                        <td><code>sudo pvcreate /dev/xvdf1</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>vgcreate</code></td>
+                        <td>Crea Volume Group</td>
+                        <td><code>sudo vgcreate vg_data /dev/xvdf1</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>lvcreate</code></td>
+                        <td>Crea Logical Volume</td>
+                        <td><code>sudo lvcreate -L 10G -n lv_web vg_data</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>pvdisplay</code></td>
+                        <td>Info de PV</td>
+                        <td><code>sudo pvdisplay</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>vgdisplay</code></td>
+                        <td>Info de VG</td>
+                        <td><code>sudo vgdisplay</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>lvdisplay</code></td>
+                        <td>Info de LV</td>
+                        <td><code>sudo lvdisplay</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>lvextend</code></td>
+                        <td>Extiende LV</td>
+                        <td><code>sudo lvextend -L +5G /dev/vg_data/lv_web</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>resize2fs</code></td>
+                        <td>Redimensiona ext filesystem</td>
+                        <td><code>sudo resize2fs /dev/vg_data/lv_web</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="fstab">
+            <h2>Montaje Automático: /etc/fstab</h2>
+            <div class="info-box">
+                <strong>📁 Formato /etc/fstab:</strong>
+                <pre><code># device    mountpoint    type    options    dump    pass
+UUID=xxx    /data         ext4    defaults   0       2
+/dev/xvdf1  /mnt/backup   xfs     defaults   0       0</code></pre>
+                <strong>Comandos útiles:</strong><br>
+                <code>sudo mount -a</code> - Monta todo en fstab<br>
+                <code>findmnt</code> - Verifica puntos de montaje
+            </div>
+        </section>
+
+        <section id="ebs">
+            <h2>EBS Volumes en EC2</h2>
+            <div class="success-box">
+                <strong>Workflow típico para nuevo volumen EBS:</strong>
+                <pre><code># 1. Ver nuevos discos
+lsblk
+
+# 2. Crear partición
+sudo fdisk /dev/xvdf
+
+# 3. Crear filesystem
+sudo mkfs.ext4 /dev/xvdf1
+
+# 4. Crear punto de montaje
+sudo mkdir /data
+
+# 5. Montar
+sudo mount /dev/xvdf1 /data
+
+# 6. Obtener UUID
+sudo blkid /dev/xvdf1
+
+# 7. Añadir a /etc/fstab para montaje permanente
+echo "UUID=xxx /data ext4 defaults,nofail 0 2" | sudo tee -a /etc/fstab
+
+# 8. Verificar
+df -h</code></pre>
+            </div>
+        </section>
+
+        <section id="swap">
+            <h2>Gestión de Swap</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>swapon</code></td>
+                        <td>Activa swap</td>
+                        <td><code>sudo swapon -a</code><br><code>sudo swapon /swapfile</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>swapoff</code></td>
+                        <td>Desactiva swap</td>
+                        <td><code>sudo swapoff -a</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>mkswap</code></td>
+                        <td>Crea área de swap</td>
+                        <td><code>sudo mkswap /dev/xvdf1</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>free</code></td>
+                        <td>Muestra uso de memoria/swap</td>
+                        <td><code>free -h</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="success-box">
+                <strong>Crear swapfile:</strong>
+                <pre><code>sudo dd if=/dev/zero of=/swapfile bs=1M count=2048
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo "/swapfile none swap sw 0 0" | sudo tee -a /etc/fstab</code></pre>
+            </div>
+        </section>
+
+        <section id="exercise">
+            <h2>🎯 Ejercicio Práctico EBS</h2>
+            <div class="success-box">
+                <pre><code># Simula añadir volumen EBS a EC2
+lsblk
+sudo fdisk -l
+sudo mkfs.ext4 /dev/xvdf
+sudo mkdir /data
+sudo mount /dev/xvdf /data
+df -h
+sudo blkid
+# Añadir a fstab para persistencia</code></pre>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>💪 Domina almacenamiento en Amazon Linux</p>
+    </footer>
+</body>
+</html>
