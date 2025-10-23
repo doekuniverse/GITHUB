@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor NANO - Amazon Linux CLI</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>📝 Editor NANO - Simple y Directo</h1>
+        <p class="subtitle">Editor de texto perfecto para principiantes</p>
+    </header>
+    <main>
+        <section id="intro">
+            <h2>NANO - Editor de Texto en Terminal</h2>
+            <div class="info-box">
+                <strong>¿Por qué usar NANO?</strong><br>
+                • Editor simple e intuitivo<br>
+                • Ideal para principiantes<br>
+                • Atajos visibles en pantalla<br>
+                • Perfecto para ediciones rápidas<br>
+                • Disponible en casi todos los sistemas Linux
+            </div>
+        </section>
+
+        <section id="install">
+            <h2>Instalación</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>sudo dnf install nano</code></td>
+                        <td>Instalar NANO en Amazon Linux 2023</td>
+                    </tr>
+                    <tr>
+                        <td><code>nano --version</code></td>
+                        <td>Verificar versión instalada</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="start">
+            <h2>Iniciar NANO</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>nano</code></td>
+                        <td>Abre nano vacío</td>
+                        <td><code>nano</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>nano archivo</code></td>
+                        <td>Abre o crea archivo</td>
+                        <td><code>nano config.txt</code><br><code>nano /etc/hosts</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>nano +línea archivo</code></td>
+                        <td>Abre en línea específica</td>
+                        <td><code>nano +25 script.sh</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>nano -w archivo</code></td>
+                        <td>Desactiva word wrap</td>
+                        <td><code>nano -w config.conf</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>nano -c archivo</code></td>
+                        <td>Muestra números de línea</td>
+                        <td><code>nano -c script.sh</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>nano -B archivo</code></td>
+                        <td>Crea backup antes de guardar</td>
+                        <td><code>nano -B important.conf</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="shortcuts">
+            <h2>Atajos de Teclado NANO</h2>
+            <div class="warning-box">
+                <strong>⚠️ Nota Importante:</strong> En NANO, <code>^</code> significa <strong>Ctrl</strong>. Por ejemplo, <code>^X</code> = Ctrl+X
+            </div>
+            
+            <h3>Comandos Básicos</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Atajo</th>
+                        <th>Acción</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>^X</code></td>
+                        <td>Salir</td>
+                        <td>Cierra nano (pregunta si guardar cambios)</td>
+                    </tr>
+                    <tr>
+                        <td><code>^O</code></td>
+                        <td>Guardar (WriteOut)</td>
+                        <td>Guarda el archivo actual</td>
+                    </tr>
+                    <tr>
+                        <td><code>^G</code></td>
+                        <td>Ayuda</td>
+                        <td>Muestra la ayuda completa de nano</td>
+                    </tr>
+                    <tr>
+                        <td><code>^R</code></td>
+                        <td>Leer archivo</td>
+                        <td>Inserta contenido de otro archivo</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Navegación</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Atajo</th>
+                        <th>Acción</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>^Y</code></td>
+                        <td>Página arriba</td>
+                        <td>Scroll hacia arriba</td>
+                    </tr>
+                    <tr>
+                        <td><code>^V</code></td>
+                        <td>Página abajo</td>
+                        <td>Scroll hacia abajo</td>
+                    </tr>
+                    <tr>
+                        <td><code>^_</code></td>
+                        <td>Ir a línea</td>
+                        <td>Salta a número de línea específico</td>
+                    </tr>
+                    <tr>
+                        <td><code>^A</code></td>
+                        <td>Inicio de línea</td>
+                        <td>Mueve cursor al inicio de la línea</td>
+                    </tr>
+                    <tr>
+                        <td><code>^E</code></td>
+                        <td>Fin de línea</td>
+                        <td>Mueve cursor al final de la línea</td>
+                    </tr>
+                    <tr>
+                        <td><code>^C</code></td>
+                        <td>Posición del cursor</td>
+                        <td>Muestra línea/columna actual</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Búsqueda y Reemplazo</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Atajo</th>
+                        <th>Acción</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>^W</code></td>
+                        <td>Buscar (Where Is)</td>
+                        <td>Busca texto en el archivo</td>
+                    </tr>
+                    <tr>
+                        <td><code>^\</code></td>
+                        <td>Buscar y reemplazar</td>
+                        <td>Reemplaza texto en el archivo</td>
+                    </tr>
+                    <tr>
+                        <td><code>^W ^W</code></td>
+                        <td>Buscar siguiente</td>
+                        <td>Repite la última búsqueda</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Edición</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Atajo</th>
+                        <th>Acción</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>^K</code></td>
+                        <td>Cortar línea (Cut)</td>
+                        <td>Corta la línea actual completa</td>
+                    </tr>
+                    <tr>
+                        <td><code>^U</code></td>
+                        <td>Pegar (Uncut)</td>
+                        <td>Pega el texto cortado</td>
+                    </tr>
+                    <tr>
+                        <td><code>^6</code></td>
+                        <td>Marcar texto</td>
+                        <td>Inicia selección de texto</td>
+                    </tr>
+                    <tr>
+                        <td><code>Alt+6</code></td>
+                        <td>Copiar</td>
+                        <td>Copia el texto marcado</td>
+                    </tr>
+                    <tr>
+                        <td><code>^J</code></td>
+                        <td>Justificar</td>
+                        <td>Justifica el párrafo actual</td>
+                    </tr>
+                    <tr>
+                        <td><code>Alt+U</code></td>
+                        <td>Deshacer</td>
+                        <td>Deshace la última acción</td>
+                    </tr>
+                    <tr>
+                        <td><code>Alt+E</code></td>
+                        <td>Rehacer</td>
+                        <td>Rehace la acción deshecha</td>
+                    </tr>
+                    <tr>
+                        <td><code>^T</code></td>
+                        <td>Revisar ortografía</td>
+                        <td>Verifica la ortografía (requiere spell)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Operaciones Especiales</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Atajo</th>
+                        <th>Acción</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>Alt+A</code></td>
+                        <td>Marcar todo</td>
+                        <td>Selecciona todo el texto</td>
+                    </tr>
+                    <tr>
+                        <td><code>Alt+3</code></td>
+                        <td>Comentar/descomentar</td>
+                        <td>Agrega/quita comentarios en código</td>
+                    </tr>
+                    <tr>
+                        <td><code>Alt+}</code></td>
+                        <td>Indentar</td>
+                        <td>Agrega indentación a la línea</td>
+                    </tr>
+                    <tr>
+                        <td><code>Alt+{</code></td>
+                        <td>Des-indentar</td>
+                        <td>Quita indentación de la línea</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="workflow">
+            <h2>Flujo de Trabajo</h2>
+            <div class="success-box">
+                <h3>💡 Flujo de Trabajo Básico en NANO</h3>
+                <pre><code># 1. Abrir archivo
+nano archivo.txt
+
+# 2. Editar el texto (escribir normalmente como en cualquier editor)
+
+# 3. Guardar cambios
+Ctrl+O → Enter
+
+# 4. Continuar editando o salir
+Ctrl+X
+
+# Guardar y salir en un solo paso
+Ctrl+O → Enter → Ctrl+X</code></pre>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🔍 Buscar y Reemplazar</h3>
+                <pre><code># 1. Buscar texto
+Ctrl+W → Escribir término → Enter
+
+# 2. Buscar y reemplazar
+Ctrl+\ → Escribir término a buscar → Enter
+       → Escribir reemplazo → Enter
+       → Confirmar cada reemplazo (Y/N/A)</code></pre>
+            </div>
+        </section>
+
+        <section id="tips">
+            <h2>💎 Tips y Mejores Prácticas</h2>
+            
+            <div class="highlight-box">
+                <h3>Consejos Útiles:</h3>
+                • <strong>Siempre usa <code>nano -w</code></strong> para archivos de configuración (desactiva word wrap)<br>
+                • <strong>Los atajos están visibles</strong> en la parte inferior de la pantalla<br>
+                • <strong>Usa <code>nano -B</code></strong> para crear backup automático antes de guardar<br>
+                • <strong>Para archivos grandes,</strong> usa <code>nano -c</code> para ver números de línea<br>
+                • <strong>Ctrl+G muestra ayuda</strong> con todos los atajos disponibles
+            </div>
+
+            <div class="info-box">
+                <h3>Configuración Personalizada</h3>
+                Crea un archivo <code>~/.nanorc</code> para personalizar NANO:<br>
+                <pre><code># Mostrar números de línea
+set linenumbers
+
+# Habilitar mouse
+set mouse
+
+# Tabs de 4 espacios
+set tabsize 4
+
+# Autoindentación
+set autoindent
+
+# Resaltado de sintaxis para varios lenguajes
+include "/usr/share/nano/*.nanorc"</code></pre>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Errores Comunes:</strong><br>
+                • Olvidar que <code>^</code> significa Ctrl, no Shift+6<br>
+                • Intentar usar atajos de otros editores (Ctrl+S no funciona, usa Ctrl+O)<br>
+                • No verificar permisos antes de editar archivos del sistema<br>
+                • Editar archivos sin hacer backup primero
+            </div>
+        </section>
+
+        <section id="exercises">
+            <h2>🎯 Ejercicios Prácticos</h2>
+            
+            <div class="success-box">
+                <h3>Ejercicio 1: Edición Básica</h3>
+                <pre><code># 1. Crear archivo de configuración
+nano ~/test-nano.conf
+
+# 2. Escribir las siguientes líneas:
+server=192.168.1.1
+port=8080
+timeout=30
+debug=false
+
+# 3. Guardar (Ctrl+O, Enter)
+# 4. Verificar posición del cursor (Ctrl+C)
+# 5. Ir al inicio del archivo (Ctrl+Y)
+# 6. Salir (Ctrl+X)</code></pre>
+            </div>
+
+            <div class="success-box">
+                <h3>Ejercicio 2: Búsqueda y Reemplazo</h3>
+                <pre><code># 1. Abrir archivo creado
+nano ~/test-nano.conf
+
+# 2. Buscar "port" (Ctrl+W, escribir "port", Enter)
+# 3. Reemplazar "8080" por "9000"
+#    - Ctrl+\
+#    - Buscar: 8080
+#    - Reemplazar: 9000
+#    - Confirmar: Y
+
+# 4. Buscar siguiente ocurrencia (Ctrl+W, Ctrl+W)
+# 5. Guardar y salir</code></pre>
+            </div>
+
+            <div class="success-box">
+                <h3>Ejercicio 3: Cortar y Pegar</h3>
+                <pre><code># 1. Crear archivo con varias líneas
+nano ~/test-lines.txt
+
+# 2. Escribir 5-6 líneas de texto
+# 3. Ir a la línea 2
+# 4. Cortar línea (Ctrl+K)
+# 5. Ir a la última línea
+# 6. Pegar (Ctrl+U)
+# 7. Deshacer (Alt+U)
+# 8. Guardar y salir</code></pre>
+            </div>
+        </section>
+
+        <section id="use-cases">
+            <h2>📋 Casos de Uso Comunes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tarea</th>
+                        <th>Comando</th>
+                        <th>Uso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Editar hosts</td>
+                        <td><code>sudo nano /etc/hosts</code></td>
+                        <td>Agregar entradas DNS locales</td>
+                    </tr>
+                    <tr>
+                        <td>Configurar SSH</td>
+                        <td><code>sudo nano /etc/ssh/sshd_config</code></td>
+                        <td>Modificar configuración SSH</td>
+                    </tr>
+                    <tr>
+                        <td>Editar crontab</td>
+                        <td><code>EDITOR=nano crontab -e</code></td>
+                        <td>Programar tareas con cron</td>
+                    </tr>
+                    <tr>
+                        <td>Crear script</td>
+                        <td><code>nano script.sh</code></td>
+                        <td>Escribir scripts bash</td>
+                    </tr>
+                    <tr>
+                        <td>Ver logs rápido</td>
+                        <td><code>nano /var/log/messages</code></td>
+                        <td>Revisar logs del sistema</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="comparison">
+            <h2>🆚 NANO vs Otros Editores</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aspecto</th>
+                        <th>NANO</th>
+                        <th>VIM</th>
+                        <th>Gedit/Notepad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Curva de aprendizaje</strong></td>
+                        <td>⭐ Muy fácil</td>
+                        <td>⭐⭐⭐⭐ Difícil</td>
+                        <td>⭐ Muy fácil</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Productividad inicial</strong></td>
+                        <td>⭐⭐⭐⭐ Alta</td>
+                        <td>⭐⭐ Baja</td>
+                        <td>⭐⭐⭐⭐⭐ Muy alta</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Productividad avanzada</strong></td>
+                        <td>⭐⭐⭐ Media</td>
+                        <td>⭐⭐⭐⭐⭐ Muy alta</td>
+                        <td>⭐⭐ Baja</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Disponibilidad</strong></td>
+                        <td>✅ Casi todos los sistemas</td>
+                        <td>✅ Todos los sistemas</td>
+                        <td>❌ Solo con GUI</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Uso remoto SSH</strong></td>
+                        <td>✅ Perfecto</td>
+                        <td>✅ Perfecto</td>
+                        <td>❌ No disponible</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ideal para</strong></td>
+                        <td>Principiantes, ediciones rápidas</td>
+                        <td>Expertos, edición masiva</td>
+                        <td>Usuarios de escritorio</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <footer>
+        <p>📝 Domina NANO en Amazon Linux</p>
+    </footer>
+    <script src="../menu.js"></script>
+</body>
+</html>

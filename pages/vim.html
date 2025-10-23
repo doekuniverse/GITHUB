@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor VIM - Amazon Linux CLI</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <h1>⚡ Editor VIM - Poder y Eficiencia</h1>
+        <p class="subtitle">Editor modal poderoso para máxima productividad</p>
+    </header>
+    <main>
+        <section id="intro">
+            <h2>VIM - Editor de Texto Modal</h2>
+            <div class="info-box">
+                <strong>VIM es un editor MODAL:</strong><br>
+                • <strong>Modo Normal:</strong> Para navegar y ejecutar comandos (modo por defecto)<br>
+                • <strong>Modo Inserción:</strong> Para escribir texto<br>
+                • <strong>Modo Visual:</strong> Para seleccionar texto<br>
+                • <strong>Modo Comando:</strong> Para ejecutar comandos (empiezan con <code>:</code>)
+            </div>
+            <div class="highlight-box">
+                <h3>¿Por qué aprender VIM?</h3>
+                • Está instalado en TODOS los sistemas Unix/Linux<br>
+                • Extremadamente poderoso y eficiente<br>
+                • Permite edición rápida sin usar el ratón<br>
+                • Muy ligero y rápido<br>
+                • Una vez que lo dominas, tu productividad se multiplica
+            </div>
+        </section>
+
+        <section id="start">
+            <h2>Iniciar y Salir de VIM</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Descripción</th>
+                        <th>Ejemplos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>vim</code></td>
+                        <td>Abre vim vacío</td>
+                        <td><code>vim</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>vim archivo</code></td>
+                        <td>Abre/crea archivo</td>
+                        <td><code>vim script.sh</code><br><code>vim /etc/nginx/nginx.conf</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>vim +línea</code></td>
+                        <td>Abre en línea específica</td>
+                        <td><code>vim +42 file.txt</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>vim -R</code></td>
+                        <td>Modo solo lectura</td>
+                        <td><code>vim -R /etc/passwd</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>:q</code></td>
+                        <td>Salir (sin cambios)</td>
+                        <td>Presiona ESC, luego <code>:q</code> y Enter</td>
+                    </tr>
+                    <tr>
+                        <td><code>:q!</code></td>
+                        <td>Salir sin guardar</td>
+                        <td>Descarta todos los cambios</td>
+                    </tr>
+                    <tr>
+                        <td><code>:w</code></td>
+                        <td>Guardar</td>
+                        <td>Guarda el archivo actual</td>
+                    </tr>
+                    <tr>
+                        <td><code>:wq</code></td>
+                        <td>Guardar y salir</td>
+                        <td>Equivalente a <code>:x</code> o <code>ZZ</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <strong>🚨 ¿Atrapado en VIM?</strong><br>
+                1. Presiona <code>ESC</code> varias veces (para volver a modo Normal)<br>
+                2. Escribe <code>:q!</code> y presiona Enter (salir sin guardar)<br>
+                3. O escribe <code>:wq</code> y presiona Enter (guardar y salir)
+            </div>
+        </section>
+
+        <section id="modes">
+            <h2>Modos de VIM</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tecla</th>
+                        <th>Modo Destino</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>ESC</code></td>
+                        <td>Normal</td>
+                        <td>Vuelve al modo Normal desde cualquier modo</td>
+                    </tr>
+                    <tr>
+                        <td><code>i</code></td>
+                        <td>Inserción</td>
+                        <td>Inserta texto ANTES del cursor</td>
+                    </tr>
+                    <tr>
+                        <td><code>a</code></td>
+                        <td>Inserción</td>
+                        <td>Inserta texto DESPUÉS del cursor</td>
+                    </tr>
+                    <tr>
+                        <td><code>I</code></td>
+                        <td>Inserción</td>
+                        <td>Inserta al inicio de la línea</td>
+                    </tr>
+                    <tr>
+                        <td><code>A</code></td>
+                        <td>Inserción</td>
+                        <td>Inserta al final de la línea</td>
+                    </tr>
+                    <tr>
+                        <td><code>o</code></td>
+                        <td>Inserción</td>
+                        <td>Abre nueva línea ABAJO</td>
+                    </tr>
+                    <tr>
+                        <td><code>O</code></td>
+                        <td>Inserción</td>
+                        <td>Abre nueva línea ARRIBA</td>
+                    </tr>
+                    <tr>
+                        <td><code>v</code></td>
+                        <td>Visual</td>
+                        <td>Modo visual (selección por carácter)</td>
+                    </tr>
+                    <tr>
+                        <td><code>V</code></td>
+                        <td>Visual Línea</td>
+                        <td>Modo visual (selección por línea)</td>
+                    </tr>
+                    <tr>
+                        <td><code>Ctrl+v</code></td>
+                        <td>Visual Bloque</td>
+                        <td>Modo visual (selección de bloque)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="navigation">
+            <h2>Navegación en VIM (Modo Normal)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tecla</th>
+                        <th>Movimiento</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>h/j/k/l</code></td>
+                        <td>←/↓/↑/→</td>
+                        <td>Movimiento básico</td>
+                    </tr>
+                    <tr>
+                        <td><code>w/b</code></td>
+                        <td>Palabra siguiente/anterior</td>
+                        <td>Navega por palabras</td>
+                    </tr>
+                    <tr>
+                        <td><code>0 / $</code></td>
+                        <td>Inicio/fin de línea</td>
+                        <td>Va al primer/último carácter</td>
+                    </tr>
+                    <tr>
+                        <td><code>gg / G</code></td>
+                        <td>Primera/última línea</td>
+                        <td>Inicio/final del archivo</td>
+                    </tr>
+                    <tr>
+                        <td><code>:número</code></td>
+                        <td>Ir a línea</td>
+                        <td><code>:25</code> va a la línea 25</td>
+                    </tr>
+                    <tr>
+                        <td><code>Ctrl+d / Ctrl+u</code></td>
+                        <td>Media página</td>
+                        <td>Scroll rápido abajo/arriba</td>
+                    </tr>
+                    <tr>
+                        <td><code>%</code></td>
+                        <td>Paréntesis coincidente</td>
+                        <td>Salta al paréntesis/llave/corchete coincidente</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="editing">
+            <h2>Edición en VIM (Modo Normal)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Acción</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>x</code></td>
+                        <td>Eliminar carácter</td>
+                        <td>Borra el carácter bajo el cursor</td>
+                    </tr>
+                    <tr>
+                        <td><code>dd</code></td>
+                        <td>Eliminar línea</td>
+                        <td>Corta la línea completa</td>
+                    </tr>
+                    <tr>
+                        <td><code>dw / d$</code></td>
+                        <td>Eliminar palabra/hasta fin</td>
+                        <td>Elimina desde cursor</td>
+                    </tr>
+                    <tr>
+                        <td><code>yy / yw</code></td>
+                        <td>Copiar línea/palabra</td>
+                        <td>Copia (yank) texto</td>
+                    </tr>
+                    <tr>
+                        <td><code>p / P</code></td>
+                        <td>Pegar después/antes</td>
+                        <td>Pega texto copiado/cortado</td>
+                    </tr>
+                    <tr>
+                        <td><code>u / Ctrl+r</code></td>
+                        <td>Deshacer/rehacer</td>
+                        <td>Deshace/rehace acciones</td>
+                    </tr>
+                    <tr>
+                        <td><code>cw / cc</code></td>
+                        <td>Cambiar palabra/línea</td>
+                        <td>Elimina y entra en modo inserción</td>
+                    </tr>
+                    <tr>
+                        <td><code>r</code></td>
+                        <td>Reemplazar carácter</td>
+                        <td>Reemplaza un solo carácter</td>
+                    </tr>
+                    <tr>
+                        <td><code>.</code></td>
+                        <td>Repetir última acción</td>
+                        <td>Muy útil para tareas repetitivas</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="search">
+            <h2>Búsqueda y Reemplazo en VIM</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Acción</th>
+                        <th>Ejemplo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>/patrón</code></td>
+                        <td>Buscar hacia adelante</td>
+                        <td><code>/error</code> busca "error"</td>
+                    </tr>
+                    <tr>
+                        <td><code>?patrón</code></td>
+                        <td>Buscar hacia atrás</td>
+                        <td><code>?warning</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>n / N</code></td>
+                        <td>Siguiente/anterior</td>
+                        <td>Navega entre resultados</td>
+                    </tr>
+                    <tr>
+                        <td><code>*</code></td>
+                        <td>Buscar palabra bajo cursor</td>
+                        <td>Busca automáticamente la palabra actual</td>
+                    </tr>
+                    <tr>
+                        <td><code>:s/old/new/</code></td>
+                        <td>Reemplazar en línea</td>
+                        <td>Primera ocurrencia</td>
+                    </tr>
+                    <tr>
+                        <td><code>:s/old/new/g</code></td>
+                        <td>Reemplazar todas en línea</td>
+                        <td>Todas en la línea actual</td>
+                    </tr>
+                    <tr>
+                        <td><code>:%s/old/new/g</code></td>
+                        <td>Reemplazar en archivo</td>
+                        <td>Global en todo el archivo</td>
+                    </tr>
+                    <tr>
+                        <td><code>:%s/old/new/gc</code></td>
+                        <td>Reemplazar con confirmación</td>
+                        <td>Pregunta antes de cada reemplazo</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="advanced">
+            <h2>⚡ Comandos Avanzados de VIM</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Comando</th>
+                        <th>Acción</th>
+                        <th>Uso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>:set number</code></td>
+                        <td>Mostrar números de línea</td>
+                        <td>Útil para debugging</td>
+                    </tr>
+                    <tr>
+                        <td><code>:syntax on</code></td>
+                        <td>Resaltado de sintaxis</td>
+                        <td>Para código fuente</td>
+                    </tr>
+                    <tr>
+                        <td><code>:split / :vsplit</code></td>
+                        <td>Dividir ventana</td>
+                        <td>Editar múltiples archivos</td>
+                    </tr>
+                    <tr>
+                        <td><code>Ctrl+w w</code></td>
+                        <td>Cambiar ventana</td>
+                        <td>Navegar entre splits</td>
+                    </tr>
+                    <tr>
+                        <td><code>:e archivo</code></td>
+                        <td>Abrir otro archivo</td>
+                        <td>Sin salir de VIM</td>
+                    </tr>
+                    <tr>
+                        <td><code>:bn / :bp</code></td>
+                        <td>Buffer siguiente/anterior</td>
+                        <td>Navegar archivos abiertos</td>
+                    </tr>
+                    <tr>
+                        <td><code>:w !sudo tee %</code></td>
+                        <td>Guardar con sudo</td>
+                        <td>Cuando abres archivo sin permisos</td>
+                    </tr>
+                    <tr>
+                        <td><code>:set paste</code></td>
+                        <td>Modo paste</td>
+                        <td>Pegar sin auto-indentación</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="workflow">
+            <h2>💡 Flujo de Trabajo</h2>
+            <div class="success-box">
+                <h3>Flujo de Trabajo Básico en VIM</h3>
+                <pre><code># 1. Abrir archivo
+vim config.txt
+
+# 2. Entrar en modo Inserción (presiona 'i')
+
+# 3. Escribir/editar texto
+
+# 4. Volver a modo Normal (presiona ESC)
+
+# 5. Guardar y salir
+:wq
+
+# O guardar sin salir
+:w</code></pre>
+            </div>
+        </section>
+
+        <section id="tips">
+            <h2>💎 Tips y Mejores Prácticas</h2>
+            
+            <div class="highlight-box">
+                <h3>Para Dominar VIM:</h3>
+                • <strong>Practica con <code>vimtutor</code></strong> (tutorial interactivo incluido)<br>
+                • <strong>Crea <code>~/.vimrc</code></strong> para configuración personalizada<br>
+                • <strong>Usa <code>:help comando</code></strong> para ayuda en cualquier comando<br>
+                • <strong>Aprende los modos</strong> - es la clave de VIM<br>
+                • <strong>La productividad aumenta exponencialmente</strong> con la práctica
+            </div>
+
+            <div class="info-box">
+                <h3>Configuración .vimrc Recomendada</h3>
+                <pre><code>" Números de línea
+set number
+
+" Resaltado de sintaxis
+syntax on
+
+" Indentación inteligente
+set autoindent
+set smartindent
+
+" Tabs de 4 espacios
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
+" Búsqueda incremental
+set incsearch
+set hlsearch
+
+" Mostrar comandos
+set showcmd
+
+" Mouse habilitado
+set mouse=a</code></pre>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Errores Comunes:</strong><br>
+                • Intentar escribir en modo Normal (presiona <code>i</code> primero)<br>
+                • Olvidar presionar <code>ESC</code> antes de comandos<br>
+                • No practicar regularmente - VIM requiere práctica<br>
+                • Rendirse temprano - la curva de aprendizaje vale la pena
+            </div>
+        </section>
+
+        <section id="exercises">
+            <h2>🎯 Ejercicios Prácticos</h2>
+            
+            <div class="success-box">
+                <h3>Ejercicio 1: Básicos de VIM</h3>
+                <pre><code># 1. Crear archivo
+vim ~/test-vim.txt
+
+# 2. Entrar en modo inserción (i)
+# 3. Escribir 5 líneas de texto
+# 4. Volver a modo Normal (ESC)
+# 5. Copiar una línea (yy)
+# 6. Pegar 3 veces (3p)
+# 7. Ir a línea 5 (:5)
+# 8. Eliminar línea (dd)
+# 9. Guardar y salir (:wq)</code></pre>
+            </div>
+
+            <div class="success-box">
+                <h3>Ejercicio 2: Búsqueda y Reemplazo</h3>
+                <pre><code># 1. Abrir archivo
+vim ~/test-vim.txt
+
+# 2. Buscar palabra (/palabra)
+# 3. Navegar resultados (n/N)
+# 4. Reemplazar en todo el archivo
+#    :%s/old/new/gc
+# 5. Confirmar cada reemplazo
+# 6. Guardar (:w)</code></pre>
+            </div>
+
+            <div class="info-box">
+                <h3>🎓 Tutorial Interactivo de VIM</h3>
+                Para aprender VIM de forma interactiva, ejecuta:<br>
+                <code>vimtutor</code><br><br>
+                Este tutorial te guiará paso a paso por los comandos básicos en aproximadamente 30 minutos.
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>⚡ Domina VIM en Amazon Linux</p>
+    </footer>
+    <script src="../menu.js"></script>
+</body>
+</html>
